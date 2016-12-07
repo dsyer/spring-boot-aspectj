@@ -7,9 +7,9 @@ import org.aspectj.lang.annotation.Aspect;
 @Aspect
 public class Interceptor {
 	
-	@Around("execution(* *(..))")
+	@Around("execution(* *(..)) && within(org.springframework.context.annotation.Condition+)")
 	public Object intercept(ProceedingJoinPoint joinPoint) throws Throwable {
-		System.err.println(joinPoint.toShortString());
+		System.err.println(joinPoint.toShortString() + ": " + joinPoint.getSignature());
 		return joinPoint.proceed();
 	}
 

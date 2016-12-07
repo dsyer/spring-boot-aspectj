@@ -2,6 +2,7 @@
 <aspectj>
     <weaver>
         <include within="com.example.*"/>
+        <include within="org.springframework.boot..*"/>
     </weaver>
 
     <aspects>
