@@ -1,0 +1,17 @@
+Load time weaving doesn't actually make much sense in a Spring Boot app that is going to run in its own process. You can just add the AspectJ agent and be done with it. That's what this project shows. You can run it from the command line and see the aspect logging to stderr:
+
+```
+$ mvn spring-boot:run
+...
+execution(InterceptorApplication..EnhancerBySpringCGLIB..8ce66f62.setBeanFactory(..))
+execution(InterceptorApplication..EnhancerBySpringCGLIB..8ce66f62.setBeanFactory(..))
+...
+```
+
+To run it in the IDE you need to add the agent to your launch configuration. E.g. in Eclipse:
+
+```
+-javaagent:${system_property:user.home}/.m2/repository/org/aspectj/aspectjweaver/1.8.9/aspectjweaver-1.8.9.jar
+```
+
+There's an open issue asking for LTW support in Spring Boot, and a user who says he made it work with a `PropertiesLauncher` (because it can set the class loader really early): https://github.com/spring-projects/spring-boot/issues/739. It doesn't work to set the classpath in the main method because too many Spring Boot classes have already been loaded by then.
