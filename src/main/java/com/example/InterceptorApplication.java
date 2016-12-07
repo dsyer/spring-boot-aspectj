@@ -15,9 +15,11 @@ public class InterceptorApplication {
 	public String home() {
 		return "Hello World";
 	}
-	
+
 	@Bean
 	public Interceptor interceptor() {
+		// This will barf at runtime if the weaver isn't working (probably a
+		// good thing)
 		return Aspects.aspectOf(Interceptor.class);
 	}
 
