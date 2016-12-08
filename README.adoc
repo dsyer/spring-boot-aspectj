@@ -14,8 +14,26 @@ To run it in the IDE you need to add the agent to your launch configuration. E.g
 -javaagent:${system_property:user.home}/.m2/repository/org/aspectj/aspectjweaver/1.8.9/aspectjweaver-1.8.9.jar
 ```
 
+If you don't do that, or you don't do it in the app at runtime you get a confusing "cyclic dependency" error from Spring on startup. It's not really cyclic, but because the `Interceptor` is an `@EventListener` Spring is trying to create it very early and gets confused. The real problem is just that `ASpects.aspectOf()` doesn't work unless the agent is attached.
+
 Note that you could add `@EnableLoadTimeWeaving` to the main application class, but it should probably be removed, as it's misleading.
 
-There's an open issue asking for LTW support in Spring Boot, and a user who says he made it work with a `PropertiesLauncher` (because it can set the class loader really early): https://github.com/spring-projects/spring-boot/issues/739. It doesn't work to set the classpath in the main method because too many Spring Boot classes have already been loaded by then.
+There's an open issue asking for LTW support in Spring Boot, and a user who says he made it work with a `PropertiesLauncher` (because it can set the class loader really early): https://github.com/spring-projects/spring-boot/issues/739. It doesn't work to set the classloader in the main method because too many Spring Boot classes have already been loaded by then, but there is a trick you canplay with [attaching the agent at runtime]http://www.eclipse.org/aspectj/doc/released/README-187.html (in which case all classes loaded up to that point can not be woven).
 
 NOTE: You can enable logging of the weaving using `-Daj.weaving.verbose=true`.
+
+WARNING: If the AspectJ config file is in `META-INF/aop.xml` then the
+fat jar built by Spring Boot has it is in the wrong place, and there
+are nasty looking
+https://github.com/spring-projects/spring-boot/issues/7587[errors on
+startup]. The app still works and the aspects are woven, but you can
+work around it by putting `aop.xml` in the `org.aspectj` package
+instead of in `META-INF`.
+
+Useful links:
+
+* http://stackoverflow.com/questions/21350966/using-autowired-with-aspectj-and-springboot/21367986
+* http://www.eclipse.org/aspectj/doc/released/README-187.html
+* https://github.com/spring-projects/spring-boot/issues/6626
+* https://github.com/spring-projects/spring-boot/issues/7587
+* https://github.com/spring-projects/spring-boot/issues/739
