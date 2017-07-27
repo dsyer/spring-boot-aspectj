@@ -81,6 +81,32 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>aspectj-maven-plugin</artifactId>
+				<version>1.10</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<proc>none</proc>
+					<complianceLevel>${java.version}</complianceLevel>
+					<showWeaveInfo>true</showWeaveInfo>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjtools</artifactId>
+						<version>${aspectj.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -100,6 +126,13 @@
 								<argLine>-javaagent:${user.home}/.m2/repository/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar</argLine>
 							</configuration>
 						</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>aspectj-maven-plugin</artifactId>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</plugin>
 					</plugins>
 				</pluginManagement>
 				<plugins>
@@ -120,36 +153,6 @@
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>aspectj-maven-plugin</artifactId>
-						<version>1.10</version>
-						<configuration>
-							<source>${java.version}</source>
-							<target>${java.version}</target>
-							<proc>none</proc>
-							<complianceLevel>${java.version}</complianceLevel>
-							<showWeaveInfo>true</showWeaveInfo>
-						</configuration>
-						<executions>
-							<execution>
-								<goals>
-									<goal>compile</goal>
-								</goals>
-							</execution>
-						</executions>
-						<dependencies>
-							<dependency>
-								<groupId>org.aspectj</groupId>
-								<artifactId>aspectjtools</artifactId>
-								<version>${aspectj.version}</version>
-							</dependency>
-						</dependencies>
-					</plugin>
-				</plugins>
-			</build>
 		</profile>
 	</profiles>
 

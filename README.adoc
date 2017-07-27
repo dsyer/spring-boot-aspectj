@@ -46,7 +46,7 @@ NOTE: Load time weaving doesn't actually make much sense in a Spring Boot app th
 
 == Compile Time Weaving
 
-To weave the aspects at compile time (and also optionally use the AspectJ language, as opposed to Java with annotations), you need an additional plugin in your build. This project puts it in a profile, so that we can show case runtime weaving as well, but if you choose copmile time weaving there is no reason not to put it in the default profile. If all you need is to weave existing byte code, the plugin configuration is very simple:
+To weave the aspects at compile time (and also optionally use the AspectJ language, as opposed to Java with annotations), you need an additional plugin in your build. If all you need is to weave existing byte code, the plugin configuration is very simple:
 
 [source,xml]
 ----
@@ -85,6 +85,8 @@ In this sample build the app with the `weave` profile to run this plugin. E.g.
 $ mvn clean install -P weave
 $ java -jar target/*.jar
 ```
+
+(The weave profile is just there in this project to switch off the default agent settings, and switch on the AspectJ compiler. It is only there so that we can show case runtime weaving as well, but if you choose compile time weaving there is no reason not to put it in the default profile.)
 
 == Running the Sample
 
