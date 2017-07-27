@@ -40,9 +40,9 @@ $ mvn clean install
 $ java -javaagent:$HOME/.m2/repository/org/aspectj/aspectjweaver/1.8.10/aspectjweaver-1.8.10.jar-jar target/*.jar
 ```
 
-If you don't do that, or you don't do it in the app at runtime you get a confusing "cyclic dependency" error from Spring on startup. It's not really cyclic, but because the `Interceptor` is an `@EventListener` Spring is trying to create it very early and gets confused. The real problem is just that `Aspects.aspectOf()` doesn't work unless the agent is attached.
+If you don't add the agent (and don't provide an implementation of `Interceptor.aspectOf()`) you might get a confusing "cyclic dependency" error from Spring on startup. It's not really cyclic, but because the `Interceptor` in this sample is an `@EventListener` Spring is trying to create it very early and gets confused. The real problem is just that `Aspects.aspectOf()` doesn't work unless the agent is attached.
 
-NOTE: Load time weaving doesn't actually make much sense in a Spring Boot app that is going to run in its own process. You can just add the AspectJ agent and be done with it.
+NOTE: Load time weaving doesn't actually make much sense in a Spring Boot app that is going to run in its own process - you can just add the AspectJ agent. Many people confuse "load time weaving" with "runtime weaving" generally (because for a long time it was the only option for many Spring apps). So if someone asks you to implement "load time weaving" in a Spring Boot app, just ask them if actually they mean "runtime weaving", and if then just use the agent.
 
 == Compile Time Weaving
 
@@ -87,6 +87,10 @@ $ java -jar target/*.jar
 ```
 
 (The weave profile is just there in this project to switch off the default agent settings, and switch on the AspectJ compiler. It is only there so that we can show case runtime weaving as well, but if you choose compile time weaving there is no reason not to put it in the default profile.)
+
+NOTE: in the plugin configuration above, we haven't asked AspectJ to weave the dependencies, and it won't do that by default. Consequently we won't see as much output from the app when it runs as we did with the runtime weaving (where all the classes were available for weaving as soon as they were loaded).
+
+NOTE: AspectJ is smart enough not to try and weave the same class twice, so you can always add the agent at runtime even when the application classes are already woven. That would be one way to pick up additional join points that you hadn't woven at compile time.
 
 == Running the Sample
 
