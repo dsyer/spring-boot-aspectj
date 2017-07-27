@@ -1,4 +1,82 @@
-Load time weaving doesn't actually make much sense in a Spring Boot app that is going to run in its own process. You can just add the AspectJ agent and be done with it. That's what this project shows. You can run it from the command line and see the aspect logging to stderr:
+Sample app showing how to use AspectJ natively with `@Aspect` and Spring Boot.
+
+AspectJ lets you write aspects using Java annotations `@Aspect` and friends. Conveniently, but sometimes confusingly, Spring lets you use the same programming model, and then uses the AspectJ tooling APIs at runtime, so some people can't tell the difference between Spring AOP and AspectJ. You don't need any special tools to use Spring AOP, but it has it's limitations, one of which is performance (you take a hit on startup while all the beans are analysed, and you take another smaller hit when the app is running and one of your aspects is executed through a proxy).
+
+Luckily, it is quite easy to set up AspectJ to weave your code natively (not with Spring), and it is *much* faster - just more steps to set up. In fact, there are multiple ways of using AspectJ to weave your code, some of which happen at runtime, and one (broadly speaking) that happens at compile time. Comile time is faster (unsurprisingly), but not massively (heuristically, maybe a 20% effect).
+
+== Converting from Spring AOP to AspectJ
+
+You need to tell AspectJ where to find your aspects, and which classes you want it to weave. You also need to tell Spring not to try and weave the same aspects again (in Spring Boot you can do that with `spring.aop.auto=false`). The configuration for AspectJ lives in an https://eclipse.org/aspectj/doc/next/devguide/ltw-configuration.html[XML file] `aop.xml`, which can be in `META-INF` or in a package called `org.aspectj`. Here's a simple example:
+
+[source,xml]
+----
+include::src/main/resources/org/aspectj/aop.xml[]
+----
+
+WARNING: If the AspectJ config file is in `META-INF/aop.xml` then the fat jar built by Spring Boot has it is in the wrong place, and there are nasty looking https://github.com/spring-projects/spring-boot/issues/7587[errors on startup]. The app still works and the aspects are woven, but you can work around it by putting `aop.xml` in the `org.aspectj` package instead of in `META-INF`.
+
+== Runtime Weaving
+
+One of the runtime options is called "load time weaving", and Spring even has an annotation `@EnableLoadTimeWeaving` to help get it off the ground. Load time weaving is rooted in the culture and mechanics of application servers - it only makes sense if you have multiple apps running in the same JVM with class loader isolation. What happens is that you use a special `ClassLoader` that manipulates the classes as they are loaded.
+
+The other option for runtime weaving is the AspectJ agent, which you add to the JVM on the command line, and it can look at all the classes and potentially weave them with aspects.
+
+E.g. :
+
+```
+$ mvn clean install
+$ java -javaagent:$HOME/.m2/repository/org/aspectj/aspectjweaver/1.8.10/aspectjweaver-1.8.10.jar-jar target/*.jar
+```
+
+If you don't do that, or you don't do it in the app at runtime you get a confusing "cyclic dependency" error from Spring on startup. It's not really cyclic, but because the `Interceptor` is an `@EventListener` Spring is trying to create it very early and gets confused. The real problem is just that `Aspects.aspectOf()` doesn't work unless the agent is attached.
+
+NOTE: Load time weaving doesn't actually make much sense in a Spring Boot app that is going to run in its own process. You can just add the AspectJ agent and be done with it.
+
+== Compile Time Weaving
+
+To weave the aspects at compile time (and also optionally use the AspectJ language, as opposed to Java with annotations), you need an additional plugin in your build. This project puts it in a profile, so that we can show case runtime weaving as well, but if you choose copmile time weaving there is no reason not to put it in the default profile. If all you need is to weave existing byte code, the plugin configuration is very simple:
+
+[source,xml]
+----
+<plugin>
+  <groupId>org.codehaus.mojo</groupId>
+  <artifactId>aspectj-maven-plugin</artifactId>
+  <version>1.10</version>
+  <configuration>
+    <source>${java.version}</source>
+    <target>${java.version}</target>
+    <proc>none</proc>                                    <1>
+    <complianceLevel>${java.version}</complianceLevel>
+  </configuration>
+  <executions>
+    <execution>
+      <goals>
+        <goal>compile</goal>
+      </goals>
+    </execution>
+  </executions>
+  <dependencies>
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjtools</artifactId>
+      <version>${aspectj.version}</version>               <2>
+    </dependency>
+  </dependencies>
+</plugin>
+----
+<1> Useful if you have annotation processors (like Spring Boot configuration processor), to avoid them being processed again by the AspectJ compiler.
+<2> Optionally update the AspectJ tooling to the latest version. The `aspectrt` jar has to be included separately.
+
+In this sample build the app with the `weave` profile to run this plugin. E.g.
+
+```
+$ mvn clean install -P weave
+$ java -jar target/*.jar
+```
+
+== Running the Sample
+
+You can run it from the command line and see the aspect logging to stderr:
 
 ```
 $ mvn spring-boot:run
@@ -8,21 +86,17 @@ execution(InterceptorApplication..EnhancerBySpringCGLIB..8ce66f62.setBeanFactory
 ...
 ```
 
-To run it in the IDE you need to add the agent to your launch configuration. E.g. in Eclipse:
+To run in the IDE you need to add the agent to your launch configuration.
 
 ```
--javaagent:${system_property:user.home}/.m2/repository/org/aspectj/aspectjweaver/1.8.9/aspectjweaver-1.8.9.jar
+-javaagent:${system_property:user.home}/.m2/repository/org/aspectj/aspectjweaver/1.8.10/aspectjweaver-1.8.10.jar
 ```
-
-If you don't do that, or you don't do it in the app at runtime you get a confusing "cyclic dependency" error from Spring on startup. It's not really cyclic, but because the `Interceptor` is an `@EventListener` Spring is trying to create it very early and gets confused. The real problem is just that `Aspects.aspectOf()` doesn't work unless the agent is attached.
 
 Note that you could add `@EnableLoadTimeWeaving` to the main application class, but it should probably be removed, as it's misleading.
 
 There's an open issue asking for LTW support in Spring Boot, and a user who says he made it work with a `PropertiesLauncher` (because it can set the class loader really early): https://github.com/spring-projects/spring-boot/issues/739. It doesn't work to set the classloader in the main method because too many Spring Boot classes have already been loaded by then, but there is a trick you can play with [attaching the agent at runtime]http://www.eclipse.org/aspectj/doc/released/README-187.html (in which case all classes loaded up to that point can not be woven).
 
 NOTE: You can enable logging of the weaving using `-Daj.weaving.verbose=true`.
-
-WARNING: If the AspectJ config file is in `META-INF/aop.xml` then the fat jar built by Spring Boot has it is in the wrong place, and there are nasty looking https://github.com/spring-projects/spring-boot/issues/7587[errors on startup]. The app still works and the aspects are woven, but you can work around it by putting `aop.xml` in the `org.aspectj` package instead of in `META-INF`.
 
 Useful links:
 
