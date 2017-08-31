@@ -1,7 +1,8 @@
 
 ```
 Benchmark                        Mode  Cnt   Score   Error  Units
-StartupBenchmark.ltw             avgt   10   2.749 ± 0.134   s/op
+StartupBenchmark.null            avgt   10   2.114 ± 0.134   s/op
+StartupBenchmark.ltw             avgt   10   2.749 ± 0.067   s/op
 StartupBenchmark.ltw_10          avgt   10   2.914 ± 0.110   s/op
 StartupBenchmark.ltw_10_100      avgt   10   2.873 ± 0.114   s/op
 StartupBenchmark.ltw_20          avgt   10   2.900 ± 0.110   s/op
@@ -20,8 +21,9 @@ image::https://docs.google.com/spreadsheets/d/e/2PACX-1vR8B4l5WkWf-9gZWmIYTkmBWM
 
 Legend:
 
-* vanilla:       Spring AOP. No aspects with method annotation pointcuts.
-* vanilla_1_50:  Spring AOP with extra aspects(1) and beans(50).
+* null:           No aspect weaving at all.
+* vanilla:        Spring AOP. No aspects with method annotation pointcuts.
+* vanilla_1_50:   Spring AOP with extra aspects(1) and beans(50).
 * vanilla_1_100:  Spring AOP with extra aspects(1) and beans(100).
 * vanilla_10_50:  Spring AOP with extra aspects(10) and beans(50).
 * vanilla_10_50:  Spring AOP with extra aspects(10) and beans(100).
@@ -36,6 +38,7 @@ Legend:
 |===
 | sample | @aspects | beans | startup(millis)
 
+| null           | 0 | 188 | 2117
 | ltw            | 0 | 188 | 2749
 | ltw_10         | 10| 188 | 2914
 | ltw_10_100     | 10| 288 | 2873
