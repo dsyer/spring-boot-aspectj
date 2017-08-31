@@ -4,6 +4,14 @@ AspectJ lets you write aspects using Java annotations `@Aspect` and friends. Con
 
 Luckily, it is quite easy to set up AspectJ to weave your code natively (not with Spring), and it is *much* faster - just more steps to set up. In fact, there are multiple ways of using AspectJ to weave your code, some of which happen at runtime, and one (broadly speaking) that happens at compile time. Comile time is faster (unsurprisingly), but not massively (heuristically, maybe a 20% effect).
 
+== Contents
+
+* spring = Spring AOP standalone sample. Aspects and application code in the same module.
+* ltw = Load Time Weaving standalone sample. Aspects and application code in the same module.
+* ctw = Compile Time Weaving standalone sample. Aspects and application code in the same module.
+* multi-ltw = Load Time Weaving multi-module sample. Aspects and application code in separate modules.
+* multi-ctw = Compile Time Weaving multi-module sample. Aspects and application code in separate modules. The aspect library (as well as the application) has to be processed by AspectJ at build time.
+
 == Converting from Spring AOP to AspectJ
 
 You need to tell AspectJ where to find your aspects, and which classes you want it to weave. You also need to tell Spring not to try and weave the same aspects again (in Spring Boot you can do that with `spring.aop.auto=false`). The configuration for AspectJ lives in an https://eclipse.org/aspectj/doc/next/devguide/ltw-configuration.html[XML file] `aop.xml`, which can be in `META-INF` or in a package called `org.aspectj`. Here's a simple example:

@@ -9,17 +9,14 @@
 	</parent>
 
 	<groupId>com.example</groupId>
-	<artifactId>parent-demo</artifactId>
+	<artifactId>multi-ctw</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Parent Demo</name>
+	<name>LTW Parent Demo</name>
 
 	<modules>
-		<module>spring</module>
-		<module>ltw</module>
-		<module>ctw</module>
-		<module>multi-ltw</module>
-		<module>multi-ctw</module>
+		<module>aspects</module>
+		<module>app</module>
 	</modules>
 
 	<properties>
