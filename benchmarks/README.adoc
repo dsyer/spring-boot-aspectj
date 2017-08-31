@@ -1,0 +1,44 @@
+
+```
+Benchmark                        Mode  Cnt   Score   Error  Units
+StartupBenchmark.ltw             avgt   10   2.122 ± 0.134   s/op
+StartupBenchmark.ltw_20_100      avgt   10   2.125 ± 0.101   s/op
+StartupBenchmark.vanilla         avgt   10   2.113 ± 0.095   s/op
+StartupBenchmark.vanilla_10_100  avgt   10   7.204 ± 0.062   s/op
+StartupBenchmark.vanilla_10_50   avgt   10   7.199 ± 0.092   s/op
+StartupBenchmark.vanilla_1_100   avgt   10   2.838 ± 0.115   s/op
+StartupBenchmark.vanilla_1_50    avgt   10   2.814 ± 0.070   s/op
+StartupBenchmark.vanilla_20_100  avgt   10  11.512 ± 0.106   s/op
+StartupBenchmark.vanilla_20_50   avgt   10  11.476 ± 0.132   s/op
+```
+
+.Number of @Aspects vs. Startup Time
+image::https://docs.google.com/spreadsheets/d/e/2PACX-1vR8B4l5WkWf-9gZWmIYTkmBWM7YWf5bRg852OakrV0G2-vtfM_UkVNRC3cTVk1079HagnMVHYZnvbib/pubchart?oid=756916910&amp;format=image[]
+
+Legend:
+
+* vanilla:       Spring AOP. No aspects with method annotation pointcuts.
+* vanilla_1_50:  Spring AOP with extra aspects(1) and beans(50).
+* vanilla_1_100:  Spring AOP with extra aspects(1) and beans(100).
+* vanilla_10_50:  Spring AOP with extra aspects(10) and beans(50).
+* vanilla_10_50:  Spring AOP with extra aspects(10) and beans(100).
+* vanilla_20_50:  Spring AOP with extra aspects(20) and beans(50).
+* vanilla_20_50:  Spring AOP with extra aspects(20) and beans(100).
+* ltw:           Load Time Weaving. Aspects woven by AspectJ agent, not Spring.
+* ltw_20_100:    Load Time Weaving with extra aspects(20) and beans(100).
+
+|===
+| sample | @aspects | beans | startup(millis)
+
+| ltw            | 0 | 188 | 2122
+| ltw_20_100     | 20| 308 | 2125
+| vanilla        | 0 | 191 | 2113
+| vanilla_1_50   | 1 | 242 | 2814
+| vanilla_1_100  | 1 | 292 | 2838
+| vanilla_10_50  | 10| 251 | 7119
+| vanilla_10_100 | 10| 301 | 7204
+| vanilla_20_50  | 20| 261 | 11476
+| vanilla_20_100 | 20| 311 | 11512
+
+
+|===

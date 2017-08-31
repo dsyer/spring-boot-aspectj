@@ -20,6 +20,7 @@
 		<module>ctw</module>
 		<module>multi-ltw</module>
 		<module>multi-ctw</module>
+		<module>benchmarks</module>
 	</modules>
 
 	<properties>
