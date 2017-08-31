@@ -27,22 +27,23 @@ You need to tell AspectJ where to find your aspects, and which classes you want 
 
 WARNING: If the AspectJ config file is in `META-INF/aop.xml` then the fat jar built by Spring Boot has it is in the wrong place, and there are nasty looking https://github.com/spring-projects/spring-boot/issues/7587[errors on startup]. The app still works and the aspects are woven, but you can work around it by putting `aop.xml` in the `org.aspectj` package instead of in `META-INF`.
 
-== Runtime Weaving
+== Load Time Weaving
 
-One of the runtime options is called "load time weaving", and Spring even has an annotation `@EnableLoadTimeWeaving` to help get it off the ground. Load time weaving is rooted in the culture and mechanics of application servers - it only makes sense if you have multiple apps running in the same JVM with class loader isolation. What happens is that you use a special `ClassLoader` that manipulates the classes as they are loaded.
+One of the runtime options is called "load time weaving", and Spring even has an annotation `@EnableLoadTimeWeaving` to help get it off the ground. The Spring annotation is rooted in the culture and mechanics of application servers - it only makes sense if you have multiple apps running in the same JVM with class loader isolation. What happens is that it uses a special `ClassLoader` that manipulates the classes as they are loaded.
 
-The other option for runtime weaving is the AspectJ agent, which you add to the JVM on the command line, and it can look at all the classes and potentially weave them with aspects.
+The other option for load time weaving is the AspectJ agent, which you add to the JVM on the command line, and it can look at all the classes and potentially weave them with aspects.
 
 E.g. :
 
 ```
+$ cd ltw
 $ mvn clean install
 $ java -javaagent:$HOME/.m2/repository/org/aspectj/aspectjweaver/1.8.10/aspectjweaver-1.8.10.jar-jar target/*.jar
 ```
 
 If you don't add the agent (and don't provide an implementation of `Interceptor.aspectOf()`) you might get a confusing "cyclic dependency" error from Spring on startup. It's not really cyclic, but because the `Interceptor` in this sample is an `@EventListener` Spring is trying to create it very early and gets confused. The real problem is just that `Aspects.aspectOf()` doesn't work unless the agent is attached.
 
-NOTE: Load time weaving doesn't actually make much sense in a Spring Boot app that is going to run in its own process - you can just add the AspectJ agent. Many people confuse "load time weaving" with "runtime weaving" generally (because for a long time it was the only option for many Spring apps). So if someone asks you to implement "load time weaving" in a Spring Boot app, just ask them if actually they mean "runtime weaving", and if then just use the agent.
+NOTE: `@EnableLoadTimeWeaving` doesn't actually make much sense in a Spring Boot app that is going to run in its own process - you can just add the AspectJ agent. Many people confuse "load time weaving" with "runtime weaving" generally (because for a long time it was the only option for many Spring apps). So if someone asks you to implement "load time weaving" in a Spring Boot app, just add the agent.
 
 == Compile Time Weaving
 
@@ -82,21 +83,21 @@ To weave the aspects at compile time (and also optionally use the AspectJ langua
 In this sample build the app with the `weave` profile to run this plugin. E.g.
 
 ```
-$ mvn clean install -P weave
+$ cd ctw
+$ mvn clean install
 $ java -jar target/*.jar
 ```
-
-(The weave profile is just there in this project to switch off the default agent settings, and switch on the AspectJ compiler. It is only there so that we can show case runtime weaving as well, but if you choose compile time weaving there is no reason not to put it in the default profile.)
 
 NOTE: in the plugin configuration above, we haven't asked AspectJ to weave the dependencies, and it won't do that by default. Consequently we won't see as much output from the app when it runs as we did with the runtime weaving (where all the classes were available for weaving as soon as they were loaded).
 
 NOTE: AspectJ is smart enough not to try and weave the same class twice, so you can always add the agent at runtime even when the application classes are already woven. That would be one way to pick up additional join points that you hadn't woven at compile time.
 
-== Running the Sample
+== Running the LTW Sample
 
-You can run it from the command line and see the aspect logging to stderr:
+You can run the samples from the command line and see the aspect logging to stderr:
 
 ```
+$ cd ltw
 $ mvn spring-boot:run
 ...
 execution(InterceptorApplication..EnhancerBySpringCGLIB..8ce66f62.setBeanFactory(..))
@@ -112,7 +113,7 @@ To run in the IDE you need to add the agent to your launch configuration.
 
 Note that you could add `@EnableLoadTimeWeaving` to the main application class, but it should probably be removed, as it's misleading.
 
-There's an open issue asking for LTW support in Spring Boot, and a user who says he made it work with a `PropertiesLauncher` (because it can set the class loader really early): https://github.com/spring-projects/spring-boot/issues/739. It doesn't work to set the classloader in the main method because too many Spring Boot classes have already been loaded by then, but there is a trick you can play with [attaching the agent at runtime]http://www.eclipse.org/aspectj/doc/released/README-187.html (in which case all classes loaded up to that point can not be woven).
+There's an open issue asking for `@EnableLoadTimeWeaving` support in Spring Boot, and a user who says he made it work with a `PropertiesLauncher` (because it can set the class loader really early): https://github.com/spring-projects/spring-boot/issues/739. It doesn't work to set the classloader in the main method because too many Spring Boot classes have already been loaded by then, but there is a trick you can play with [attaching the agent at runtime]http://www.eclipse.org/aspectj/doc/released/README-187.html (in which case all classes loaded up to that point can not be woven).
 
 NOTE: You can enable logging of the weaving using `-Daj.weaving.verbose=true`.
 
