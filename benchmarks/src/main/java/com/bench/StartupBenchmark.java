@@ -82,8 +82,8 @@ public class StartupBenchmark {
 	}
 
 	@Benchmark
-	public void ltw_20_100(ApplicationState state) throws Exception {
-		state.setProgArgs("--bench.beans=100", "--bench.aspects=20", "--spring.aop.auto=false");
+	public void ltw_100(ApplicationState state) throws Exception {
+		state.setProgArgs("--bench.beans=100", "--spring.aop.auto=false");
 		state.setJvmArgs(
 				"-javaagent:" + home() + "/.m2/repository/org/aspectj/aspectjweaver/1.8.10/aspectjweaver-1.8.10.jar");
 		state.run();

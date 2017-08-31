@@ -1,0 +1,32 @@
+<!DOCTYPE aspectj PUBLIC "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
+<aspectj>
+	<weaver>
+		<include within="com.example.*" />
+		<include within="org.springframework.boot..*" />
+	</weaver>
+
+	<aspects>
+		<aspect name="com.example.Interceptor" />
+		<!-- aspect name="com.aspects.ServiceInterceptor1" />
+		<aspect name="com.aspects.ServiceInterceptor2" />
+		<aspect name="com.aspects.ServiceInterceptor3" />
+		<aspect name="com.aspects.ServiceInterceptor4" />
+		<aspect name="com.aspects.ServiceInterceptor5" />
+		<aspect name="com.aspects.ServiceInterceptor6" />
+		<aspect name="com.aspects.ServiceInterceptor7" />
+		<aspect name="com.aspects.ServiceInterceptor8" />
+		<aspect name="com.aspects.ServiceInterceptor9" />
+		<aspect name="com.aspects.ServiceInterceptor10" />
+		<aspect name="com.aspects.ServiceInterceptor11" />
+		<aspect name="com.aspects.ServiceInterceptor12" />
+		<aspect name="com.aspects.ServiceInterceptor13" />
+		<aspect name="com.aspects.ServiceInterceptor14" />
+		<aspect name="com.aspects.ServiceInterceptor15" />
+		<aspect name="com.aspects.ServiceInterceptor16" />
+		<aspect name="com.aspects.ServiceInterceptor17" />
+		<aspect name="com.aspects.ServiceInterceptor18" />
+		<aspect name="com.aspects.ServiceInterceptor19" />
+		<aspect name="com.aspects.ServiceInterceptor20" /-->
+	</aspects>
+
+</aspectj>

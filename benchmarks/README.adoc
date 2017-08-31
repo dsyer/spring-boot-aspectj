@@ -1,8 +1,11 @@
 
 ```
 Benchmark                        Mode  Cnt   Score   Error  Units
-StartupBenchmark.ltw             avgt   10   2.122 ± 0.134   s/op
-StartupBenchmark.ltw_20_100      avgt   10   2.125 ± 0.101   s/op
+StartupBenchmark.ltw             avgt   10   2.749 ± 0.134   s/op
+StartupBenchmark.ltw_10          avgt   10   2.914 ± 0.110   s/op
+StartupBenchmark.ltw_10_100      avgt   10   2.873 ± 0.114   s/op
+StartupBenchmark.ltw_20          avgt   10   2.900 ± 0.110   s/op
+StartupBenchmark.ltw_20_100      avgt   10   2.965 ± 0.114   s/op
 StartupBenchmark.vanilla         avgt   10   2.113 ± 0.095   s/op
 StartupBenchmark.vanilla_10_100  avgt   10   7.204 ± 0.062   s/op
 StartupBenchmark.vanilla_10_50   avgt   10   7.199 ± 0.092   s/op
@@ -12,7 +15,7 @@ StartupBenchmark.vanilla_20_100  avgt   10  11.512 ± 0.106   s/op
 StartupBenchmark.vanilla_20_50   avgt   10  11.476 ± 0.132   s/op
 ```
 
-.Number of @Aspects vs. Startup Time
+.Number of @Aspectsh vs. Startup Time
 image::https://docs.google.com/spreadsheets/d/e/2PACX-1vR8B4l5WkWf-9gZWmIYTkmBWM7YWf5bRg852OakrV0G2-vtfM_UkVNRC3cTVk1079HagnMVHYZnvbib/pubchart?oid=756916910&amp;format=image[]
 
 Legend:
@@ -24,14 +27,20 @@ Legend:
 * vanilla_10_50:  Spring AOP with extra aspects(10) and beans(100).
 * vanilla_20_50:  Spring AOP with extra aspects(20) and beans(50).
 * vanilla_20_50:  Spring AOP with extra aspects(20) and beans(100).
-* ltw:           Load Time Weaving. Aspects woven by AspectJ agent, not Spring.
-* ltw_20_100:    Load Time Weaving with extra aspects(20) and beans(100).
+* ltw:            Load Time Weaving. Aspects woven by AspectJ agent, not Spring.
+* ltw_10:         Load Time Weaving with extra aspects (10).
+* ltw_10_100:     Load Time Weaving with extra aspects(10) and beans(100).
+* ltw_20:         Load Time Weaving with extra aspects (20).
+* ltw_20_100:     Load Time Weaving with extra aspects(20) and beans(100).
 
 |===
 | sample | @aspects | beans | startup(millis)
 
-| ltw            | 0 | 188 | 2122
-| ltw_20_100     | 20| 308 | 2125
+| ltw            | 0 | 188 | 2749
+| ltw_10         | 10| 188 | 2914
+| ltw_10_100     | 10| 288 | 2873
+| ltw_20         | 20| 188 | 2900
+| ltw_20_100     | 20| 288 | 2965
 | vanilla        | 0 | 191 | 2113
 | vanilla_1_50   | 1 | 242 | 2814
 | vanilla_1_100  | 1 | 292 | 2838
@@ -42,3 +51,13 @@ Legend:
 
 
 |===
+
+The vanilla (Spring AOP) samples are much slower with @aspects than
+without and the slow down is proportional to the number of pointcuts
+(not so much with the number of beans). It's pretty awful: 400ms per
+pointcut.
+
+The "ltw" samples are a bit slower with @aspects than without, but the
+slow down is not proportional to the number of pointcuts. Note,
+however, that all the pointcuts were the same, so maybe there is some
+optimization in AspectJ that doesn't help for a realistic system.
