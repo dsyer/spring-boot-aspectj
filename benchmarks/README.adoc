@@ -16,7 +16,7 @@ StartupBenchmark.vanilla_20_100  avgt   10  11.512 ± 0.106   s/op
 StartupBenchmark.vanilla_20_50   avgt   10  11.476 ± 0.132   s/op
 ```
 
-.Number of @Aspectsh vs. Startup Time
+.Number of @Aspects vs. Startup Time
 image::https://docs.google.com/spreadsheets/d/e/2PACX-1vR8B4l5WkWf-9gZWmIYTkmBWM7YWf5bRg852OakrV0G2-vtfM_UkVNRC3cTVk1079HagnMVHYZnvbib/pubchart?oid=756916910&amp;format=image[]
 
 Legend:
