@@ -74,6 +74,42 @@ public class StartupBenchmark {
 	}
 
 	@Benchmark
+	public void annotation_1_50(ApplicationState state) throws Exception {
+		state.setProgArgs("--bench.beans=50", "--bench.aspects=1", "--bench.annotation=true");
+		state.run();
+	}
+
+	@Benchmark
+	public void annotation_10_50(ApplicationState state) throws Exception {
+		state.setProgArgs("--bench.beans=50", "--bench.aspects=10", "--bench.annotation=true");
+		state.run();
+	}
+
+	@Benchmark
+	public void annotation_20_50(ApplicationState state) throws Exception {
+		state.setProgArgs("--bench.beans=50", "--bench.aspects=20", "--bench.annotation=true");
+		state.run();
+	}
+
+	@Benchmark
+	public void annotation_1_100(ApplicationState state) throws Exception {
+		state.setProgArgs("--bench.beans=100", "--bench.aspects=1", "--bench.annotation=true");
+		state.run();
+	}
+
+	@Benchmark
+	public void annotation_10_100(ApplicationState state) throws Exception {
+		state.setProgArgs("--bench.beans=100", "--bench.aspects=10", "--bench.annotation=true");
+		state.run();
+	}
+
+	@Benchmark
+	public void annotation_20_100(ApplicationState state) throws Exception {
+		state.setProgArgs("--bench.beans=100", "--bench.aspects=20", "--bench.annotation=true");
+		state.run();
+	}
+
+	@Benchmark
 	public void ltw(ApplicationState state) throws Exception {
 		state.setProgArgs("--spring.aop.auto=false");
 		state.setJvmArgs(
@@ -95,6 +131,7 @@ public class StartupBenchmark {
 
 	@State(Scope.Benchmark)
 	public static class ApplicationState extends ProcessLauncherState {
+
 		public ApplicationState() {
 			super("target", "--server.port=0");
 		}

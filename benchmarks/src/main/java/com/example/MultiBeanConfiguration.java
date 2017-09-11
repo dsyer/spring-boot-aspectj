@@ -45,7 +45,17 @@ class Service {
 
 @Aspect
 class ServiceInterceptor {
-	@Around("execution (@org.springframework.scheduling.annotation.Async  * *.*(..))")
+	@Around("execution (* com.example..*(..))")
+	public Object intercept(ProceedingJoinPoint joinPoint) throws Throwable {
+		Object result = joinPoint.proceed();
+		System.err.println(joinPoint.toShortString() + ": " + result);
+		return result;
+	}
+}
+
+@Aspect
+class AnnotationInterceptor {
+	@Around("@annotation(org.springframework.scheduling.annotation.Async) && execution (* com.example..*(..))")
 	public Object intercept(ProceedingJoinPoint joinPoint) throws Throwable {
 		Object result = joinPoint.proceed();
 		System.err.println(joinPoint.toShortString() + ": " + result);
@@ -72,9 +82,13 @@ class MultiBeanSelector implements ImportBeanDefinitionRegistrar {
 		}
 		beans += total;
 		total = environment.getProperty("bench.aspects", Integer.class, 0);
+		Class<?> interceptorType = ServiceInterceptor.class;
+		if (environment.getProperty("bench.annotation", Boolean.class, false)) {
+			interceptorType = AnnotationInterceptor.class;
+		}
 		for (int i = aspects; i < aspects + total; i++) {
 			registry.registerBeanDefinition("aspect" + i, BeanDefinitionBuilder
-					.rootBeanDefinition(ServiceInterceptor.class).getBeanDefinition());
+					.rootBeanDefinition(interceptorType).getBeanDefinition());
 		}
 		aspects += total;
 	}

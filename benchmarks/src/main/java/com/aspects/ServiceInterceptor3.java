@@ -26,7 +26,7 @@ import org.aspectj.lang.annotation.Aspect;
  */
 @Aspect
 class ServiceInterceptor3 {
-	@Around("execution (@org.springframework.scheduling.annotation.Async  * *.*(..))")
+	@Around("@annotation(org.springframework.scheduling.annotation.Async) && execution (* *.*(..))")
 	public Object intercept(ProceedingJoinPoint joinPoint) throws Throwable {
 		Object result = joinPoint.proceed();
 		System.err.println(joinPoint.toShortString() + ": " + result);

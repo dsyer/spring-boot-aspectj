@@ -7,13 +7,13 @@ StartupBenchmark.ltw_10          avgt   10   2.914 ± 0.110   s/op
 StartupBenchmark.ltw_10_100      avgt   10   2.873 ± 0.114   s/op
 StartupBenchmark.ltw_20          avgt   10   2.900 ± 0.110   s/op
 StartupBenchmark.ltw_20_100      avgt   10   2.965 ± 0.114   s/op
-StartupBenchmark.vanilla         avgt   10   2.113 ± 0.095   s/op
-StartupBenchmark.vanilla_10_100  avgt   10   7.204 ± 0.062   s/op
-StartupBenchmark.vanilla_10_50   avgt   10   7.199 ± 0.092   s/op
-StartupBenchmark.vanilla_1_100   avgt   10   2.838 ± 0.115   s/op
-StartupBenchmark.vanilla_1_50    avgt   10   2.814 ± 0.070   s/op
-StartupBenchmark.vanilla_20_100  avgt   10  11.512 ± 0.106   s/op
-StartupBenchmark.vanilla_20_50   avgt   10  11.476 ± 0.132   s/op
+StartupBenchmark.annotation         avgt   10   2.113 ± 0.095   s/op
+StartupBenchmark.annotation_10_100  avgt   10   7.204 ± 0.062   s/op
+StartupBenchmark.annotation_10_50   avgt   10   7.199 ± 0.092   s/op
+StartupBenchmark.annotation_1_100   avgt   10   2.838 ± 0.115   s/op
+StartupBenchmark.annotation_1_50    avgt   10   2.814 ± 0.070   s/op
+StartupBenchmark.annotation_20_100  avgt   10  11.512 ± 0.106   s/op
+StartupBenchmark.annotation_20_50   avgt   10  11.476 ± 0.132   s/op
 ```
 
 .Number of @Aspects vs. Startup Time
@@ -22,13 +22,13 @@ image::https://docs.google.com/spreadsheets/d/e/2PACX-1vR8B4l5WkWf-9gZWmIYTkmBWM
 Legend:
 
 * null:           No aspect weaving at all.
-* vanilla:        Spring AOP. No aspects with method annotation pointcuts.
-* vanilla_1_50:   Spring AOP with extra aspects(1) and beans(50).
-* vanilla_1_100:  Spring AOP with extra aspects(1) and beans(100).
-* vanilla_10_50:  Spring AOP with extra aspects(10) and beans(50).
-* vanilla_10_50:  Spring AOP with extra aspects(10) and beans(100).
-* vanilla_20_50:  Spring AOP with extra aspects(20) and beans(50).
-* vanilla_20_50:  Spring AOP with extra aspects(20) and beans(100).
+* annotation:        Spring AOP. No aspects with method annotation pointcuts.
+* annotation_1_50:   Spring AOP with extra aspects(1) and beans(50).
+* annotation_1_100:  Spring AOP with extra aspects(1) and beans(100).
+* annotation_10_50:  Spring AOP with extra aspects(10) and beans(50).
+* annotation_10_50:  Spring AOP with extra aspects(10) and beans(100).
+* annotation_20_50:  Spring AOP with extra aspects(20) and beans(50).
+* annotation_20_50:  Spring AOP with extra aspects(20) and beans(100).
 * ltw:            Load Time Weaving. Aspects woven by AspectJ agent, not Spring.
 * ltw_10:         Load Time Weaving with extra aspects (10).
 * ltw_10_100:     Load Time Weaving with extra aspects(10) and beans(100).
@@ -44,18 +44,18 @@ Legend:
 | ltw_10_100     | 10| 288 | 2873
 | ltw_20         | 20| 188 | 2900
 | ltw_20_100     | 20| 288 | 2965
-| vanilla        | 0 | 191 | 2113
-| vanilla_1_50   | 1 | 242 | 2814
-| vanilla_1_100  | 1 | 292 | 2838
-| vanilla_10_50  | 10| 251 | 7119
-| vanilla_10_100 | 10| 301 | 7204
-| vanilla_20_50  | 20| 261 | 11476
-| vanilla_20_100 | 20| 311 | 11512
+| annotation        | 0 | 191 | 2113
+| annotation_1_50   | 1 | 242 | 2814
+| annotation_1_100  | 1 | 292 | 2838
+| annotation_10_50  | 10| 251 | 7119
+| annotation_10_100 | 10| 301 | 7204
+| annotation_20_50  | 20| 261 | 11476
+| annotation_20_100 | 20| 311 | 11512
 
 
 |===
 
-The vanilla (Spring AOP) samples are much slower with @aspects than
+The annotation (Spring AOP) samples are much slower with @aspects than
 without and the slow down is proportional to the number of pointcuts
 (not so much with the number of beans). It's pretty awful: 400ms per
 pointcut.

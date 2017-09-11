@@ -1,4 +1,5 @@
 /*
+
  * Copyright 2016-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +27,7 @@ import org.aspectj.lang.annotation.Aspect;
  */
 @Aspect
 class ServiceInterceptor6 {
-	@Around("execution (@org.springframework.scheduling.annotation.Async  * *.*(..))")
+	@Around("@annotation(org.springframework.scheduling.annotation.Async) && execution (* *.*(..))")
 	public Object intercept(ProceedingJoinPoint joinPoint) throws Throwable {
 		Object result = joinPoint.proceed();
 		System.err.println(joinPoint.toShortString() + ": " + result);
