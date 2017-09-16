@@ -82,7 +82,7 @@ public class StartupBenchmark {
 
 			public String[] getArgs() {
 				return new String[] { "--server.port=0", "--bench.aspects=" + aspects,
-						"--bench.beans=" + beans, "--bench.annotations=" + annotation };
+						"--bench.beans=" + beans, "--bench.annotation=" + annotation };
 			}
 		}
 
