@@ -23,6 +23,7 @@ import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.annotations.Warmup;
@@ -71,7 +72,7 @@ public class StartupBenchmark {
 			private boolean annotation;
 
 			private Scale(int aspects, int beans) {
-				this(beans, aspects, false);
+				this(aspects, beans, false);
 			}
 
 			private Scale(int aspects, int beans, boolean annotation) {
@@ -91,6 +92,10 @@ public class StartupBenchmark {
 
 		public SpringState() {
 			super("target");
+		}
+
+		@Setup(Level.Iteration)
+		public void start() throws Exception {
 			setProgArgs(scale.getArgs());
 		}
 
