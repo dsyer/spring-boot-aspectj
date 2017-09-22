@@ -43,7 +43,7 @@ public class StartupBenchmark {
 	public void ltw(ApplicationState state) throws Exception {
 		state.setProgArgs("--spring.aop.auto=false");
 		state.setJvmArgs("-javaagent:" + home()
-				+ "/.m2/repository/org/aspectj/aspectjweaver/1.8.10/aspectjweaver-1.8.10.jar");
+				+ "/.m2/repository/org/aspectj/aspectjweaver/1.8.11.BUILD-SNAPSHOT/aspectjweaver-1.8.11.BUILD-SNAPSHOT.jar");
 		state.run();
 	}
 
@@ -51,7 +51,7 @@ public class StartupBenchmark {
 	public void ltw_100(ApplicationState state) throws Exception {
 		state.setProgArgs("--bench.beans=100", "--spring.aop.auto=false");
 		state.setJvmArgs("-javaagent:" + home()
-				+ "/.m2/repository/org/aspectj/aspectjweaver/1.8.10/aspectjweaver-1.8.10.jar");
+				+ "/.m2/repository/org/aspectj/aspectjweaver/1.8.11.BUILD-SNAPSHOT/aspectjweaver-1.8.11.BUILD-SNAPSHOT.jar");
 		state.run();
 	}
 

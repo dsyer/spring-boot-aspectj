@@ -1,4 +1,27 @@
 
+== AspectJ 1.8.11 Snapshots
+
+(Seems to fix the problem with Spring AOP.)
+
+```
+Benchmark                 (scale)  Mode  Cnt  Score   Error  Units
+StartupBenchmark.ltw          N/A  avgt   10  1.878 ± 0.039   s/op
+StartupBenchmark.ltw_100      N/A  avgt   10  1.930 ± 0.083   s/op
+StartupBenchmark.spring     v0_10  avgt   10  1.485 ± 0.033   s/op
+StartupBenchmark.spring     v1_10  avgt   10  1.605 ± 0.069   s/op
+StartupBenchmark.spring    v1_100  avgt   10  1.629 ± 0.022   s/op
+StartupBenchmark.spring    v10_50  avgt   10  2.176 ± 0.091   s/op
+StartupBenchmark.spring    v20_50  avgt   10  2.771 ± 0.080   s/op
+StartupBenchmark.spring     a0_10  avgt   10  1.485 ± 0.049   s/op
+StartupBenchmark.spring     a1_10  avgt   10  1.564 ± 0.032   s/op
+StartupBenchmark.spring    a1_100  avgt   10  1.603 ± 0.047   s/op
+StartupBenchmark.spring    a10_50  avgt   10  1.831 ± 0.013   s/op
+StartupBenchmark.spring   a10_100  avgt   10  1.890 ± 0.060   s/op
+StartupBenchmark.spring    a20_50  avgt   10  2.121 ± 0.083   s/op
+```
+
+== AspectJ 1.8.10
+
 ```
 Benchmark                        Mode  Cnt   Score   Error  Units
 StartupBenchmark.null            avgt   10   2.114 ± 0.134   s/op
