@@ -11,6 +11,7 @@ Luckily, it is quite easy to set up AspectJ to weave your code natively (not wit
 * ctw = Compile Time Weaving standalone sample. Aspects and application code in the same module.
 * multi-ltw = Load Time Weaving multi-module sample. Aspects and application code in separate modules.
 * multi-ctw = Compile Time Weaving multi-module sample. Aspects and application code in separate modules. The aspect library (as well as the application) has to be processed by AspectJ at build time.
+* timing = A utility library for logging timing data on startup for some internal features of Spring and Spring Boot
 
 == Converting from Spring AOP to AspectJ
 
@@ -46,12 +47,14 @@ E.g. :
 ```
 $ cd ltw
 $ mvn clean install
-$ java -javaagent:$HOME/.m2/repository/org/aspectj/aspectjweaver/1.8.10/aspectjweaver-1.8.10.jar-jar target/*.jar
+$ java -javaagent:$HOME/.m2/repository/org/aspectj/aspectjweaver/1.8.13/aspectjweaver-1.8.13.jar -jar target/*.jar
 ```
 
 If you don't add the agent (and don't provide an implementation of `Interceptor.aspectOf()`) you might get a confusing "cyclic dependency" error from Spring on startup. It's not really cyclic, but because the `Interceptor` in this sample is an `@EventListener` Spring is trying to create it very early and gets confused. The real problem is just that `Aspects.aspectOf()` doesn't work unless the agent is attached.
 
 NOTE: `@EnableLoadTimeWeaving` doesn't actually make much sense in a Spring Boot app that is going to run in its own process - you can just add the AspectJ agent. Many people confuse "load time weaving" with "runtime weaving" generally (because for a long time it was the only option for many Spring apps). So if someone asks you to implement "load time weaving" in a Spring Boot app, just add the agent.
+
+NOTE: The "timing" library is a dependency of this project so it gets woven at runtime and prints out interesting (but verbose) information about timings for bean initialization. This is in addition to the aspects library.
 
 == Compile Time Weaving
 
@@ -100,6 +103,8 @@ NOTE: in the plugin configuration above, we haven't asked AspectJ to weave the d
 
 NOTE: AspectJ is smart enough not to try and weave the same class twice, so you can always add the agent at runtime even when the application classes are already woven. That would be one way to pick up additional join points that you hadn't woven at compile time.
 
+NOTE: The "timing" library is not a dependency of this project, and there wouldn't be much point doing that because the pointcuts it defines would not match anything that was being compiled here.
+
 == Running the LTW Sample
 
 You can run the samples from the command line and see the aspect logging to stderr:
@@ -116,7 +121,7 @@ execution(InterceptorApplication..EnhancerBySpringCGLIB..8ce66f62.setBeanFactory
 To run in the IDE you need to add the agent to your launch configuration.
 
 ```
--javaagent:${system_property:user.home}/.m2/repository/org/aspectj/aspectjweaver/1.8.10/aspectjweaver-1.8.10.jar
+-javaagent:${system_property:user.home}/.m2/repository/org/aspectj/aspectjweaver/1.8.13/aspectjweaver-1.8.13.jar
 ```
 
 Note that you could add `@EnableLoadTimeWeaving` to the main application class, but it should probably be removed, as it's misleading.

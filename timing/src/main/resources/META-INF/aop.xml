@@ -1,12 +1,9 @@
 <!DOCTYPE aspectj PUBLIC "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
 <aspectj>
-	<weaver options="-verbose -showWeaveInfo">
-		<include within="com.example.*" />
+	<weaver>
 		<include within="org.springframework..*" />
 	</weaver>
-
 	<aspects>
-		<aspect name="com.example.Interceptor" />
+		<aspect name="org.springframework.boot.aspects.TimingInterceptor" />
 	</aspects>
-
 </aspectj>

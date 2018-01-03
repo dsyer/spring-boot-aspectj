@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.6.RELEASE</version>
+		<version>1.5.9.RELEASE</version>
 	</parent>
 
 	<groupId>com.example</groupId>
@@ -15,6 +15,7 @@
 	<name>Parent Demo</name>
 
 	<modules>
+		<module>timing</module>
 		<module>spring</module>
 		<module>ltw</module>
 		<module>ctw</module>
@@ -26,6 +27,18 @@
 	<properties>
         <java.version>1.8</java.version>
 	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 	<repositories>
 		<repository>
