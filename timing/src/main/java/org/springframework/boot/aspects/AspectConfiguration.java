@@ -36,7 +36,7 @@ public class AspectConfiguration {
 	@Bean
 	@Conditional(AspectsCondition.class)
 	@ConditionalOnClass(name = "org.aspectj.lang.Aspects")
-	public TimingInterceptor interceptor() {
+	public TimingInterceptor timingInterceptor() {
 		return Aspects.aspectOf(TimingInterceptor.class);
 	}
 

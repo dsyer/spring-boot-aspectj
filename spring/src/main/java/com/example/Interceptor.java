@@ -33,7 +33,14 @@ public class Interceptor {
 		System.err.println(joinPoint.toShortString() + ": " + result);
 		return result;
 	}
-	
+
+	@Around("execution(* *.*(..)) && within(com.example..*)")
+	public Object another(ProceedingJoinPoint joinPoint) throws Throwable {
+		Object result = joinPoint.proceed();
+		System.err.println(joinPoint.toShortString() + ": " + result);
+		return result;
+	}
+
 	@EventListener
 	public void started(ContextRefreshedEvent event) {
 		System.err.println(message + ": " + event);

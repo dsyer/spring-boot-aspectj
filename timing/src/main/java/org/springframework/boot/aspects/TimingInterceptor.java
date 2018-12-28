@@ -38,6 +38,10 @@ public class TimingInterceptor {
 
 	private StopWatch init = new StopWatch("init");
 
+	private StopWatch app = new StopWatch("app");
+
+	private int level = 0;
+
 	@Around("execution(private * org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor.postProcessBeforeInitialization(Object, String, ..)) && args(bean,..)")
 	public Object bind(ProceedingJoinPoint joinPoint, Object bean) throws Throwable {
 		bind.start();
@@ -56,6 +60,38 @@ public class TimingInterceptor {
 		logger.info("Post," + joinPoint.getSignature().getDeclaringType().getSimpleName()
 				+ "." + joinPoint.getSignature().getName() + ","
 				+ bean.getClass().getName() + "," + (t1 - t0));
+		return result;
+	}
+
+	@Around("execution(* org.springframework.boot.SpringApplication+.*(..))")
+	public Object initializer(ProceedingJoinPoint joinPoint) throws Throwable {
+		String task = app.currentTaskName();
+		if (task != null) {
+			app.stop();
+		}
+		long t0 = System.currentTimeMillis();
+		level++;
+		app.start(joinPoint.getSignature().getName());
+		Object result = joinPoint.proceed();
+		long t1 = System.currentTimeMillis();
+		app.stop();
+		if (task != null) {
+			app.start(task);
+		}
+		logger.info("App," + level + "," + joinPoint.getSignature().getName() + ","
+				+ (t1 - t0));
+		level--;
+		return result;
+	}
+
+	@Around("execution(* org.springframework.web.reactive.DispatcherHandler+.initStrategies(..))")
+	public Object initStrategies(ProceedingJoinPoint joinPoint) throws Throwable {
+		long t0 = System.currentTimeMillis();
+		Object result = joinPoint.proceed();
+		long t1 = System.currentTimeMillis();
+		logger.info("Strategies,"
+				+ joinPoint.getSignature().getDeclaringType().getSimpleName() + "."
+				+ joinPoint.getSignature().getName() + "," + (t1 - t0));
 		return result;
 	}
 
