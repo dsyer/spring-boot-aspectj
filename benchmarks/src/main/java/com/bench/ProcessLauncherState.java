@@ -52,7 +52,7 @@ public class ProcessLauncherState {
 		this.args.add(count++, System.getProperty("java.home") + "/bin/java");
 		this.args.add(count++, "-Xmx128m");
 		this.args.add(count++, "-cp");
-		this.args.add(count++, getClasspathJdk8());
+		this.args.add(count++, getClasspathJdk9());
 		this.args.add(count++, "-Djava.security.egd=file:/dev/./urandom");
 		this.args.add(count++, "-XX:TieredStopAtLevel=1"); // zoom
 		if (System.getProperty("bench.args") != null) {
@@ -85,7 +85,7 @@ public class ProcessLauncherState {
 		}
 
 		String resultString = builder.toString();
-		logger.info(resultString);
+		logger.info("Result Classpath: " + resultString);
 
 		return resultString;
 	}
@@ -102,7 +102,15 @@ public class ProcessLauncherState {
 			}
 		}
 
-		return Arrays.toString(result);
+		String resultString = Arrays.toString(result);
+
+		resultString = resultString.replaceAll(", ", ":");
+		resultString = resultString.replace('[', ' ');
+		resultString = resultString.replace(']', ' ');
+
+		logger.info("Result Classpath: " + resultString);
+
+		return resultString;
 	}
 
 	public void after() throws Exception {

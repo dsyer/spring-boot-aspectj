@@ -21,7 +21,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 		<jmh.version>1.23</jmh.version>
 		<thin-jar.version>1.0.20.RELEASE</thin-jar.version>
 		<start-class>org.openjdk.jmh.Main</start-class>
