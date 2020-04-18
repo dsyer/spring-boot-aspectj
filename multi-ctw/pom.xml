@@ -12,7 +12,7 @@
 	<artifactId>multi-ctw</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>LTW Parent Demo</name>
+	<name>multi-ctw</name>
 
 	<modules>
 		<module>ctw-aspects</module>

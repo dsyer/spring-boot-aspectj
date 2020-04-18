@@ -12,7 +12,7 @@
 	<artifactId>multi-ltw</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>LTW Parent Demo</name>
+	<name>multi-ltw</name>
 
 	<modules>
 		<module>ltw-aspects</module>
