@@ -15,8 +15,8 @@
 	<name>LTW Parent Demo</name>
 
 	<modules>
-		<module>aspects</module>
-		<module>app</module>
+		<module>ltw-aspects</module>
+		<module>ltw-app</module>
 	</modules>
 
 	<properties>
