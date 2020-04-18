@@ -20,17 +20,23 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.openjdk.jmh.util.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.example.InterceptorApplication;
 
-import org.openjdk.jmh.util.Utils;
-
 public class ProcessLauncherState {
+
+	private static final Logger logger = LoggerFactory.getLogger(ProcessLauncherState.class);
 
 	private Process started;
 	private List<String> args;
@@ -46,12 +52,11 @@ public class ProcessLauncherState {
 		this.args.add(count++, System.getProperty("java.home") + "/bin/java");
 		this.args.add(count++, "-Xmx128m");
 		this.args.add(count++, "-cp");
-		this.args.add(count++, getClasspath());
+		this.args.add(count++, getClasspathJdk8());
 		this.args.add(count++, "-Djava.security.egd=file:/dev/./urandom");
 		this.args.add(count++, "-XX:TieredStopAtLevel=1"); // zoom
 		if (System.getProperty("bench.args") != null) {
-			this.args.addAll(count++,
-					Arrays.asList(System.getProperty("bench.args").split(" ")));
+			this.args.addAll(count++, Arrays.asList(System.getProperty("bench.args").split(" ")));
 		}
 		this.length = args.length;
 		this.home = new File(dir);
@@ -69,31 +74,50 @@ public class ProcessLauncherState {
 		this.jvmArgs = Arrays.asList(extraArgs);
 	}
 
-	private String getClasspath() {
+	String getClasspathJdk8() {
 		StringBuilder builder = new StringBuilder();
+
 		for (URL url : ((URLClassLoader) getClass().getClassLoader()).getURLs()) {
 			if (builder.length() > 0) {
 				builder.append(File.pathSeparator);
 			}
 			builder.append(url.toString());
 		}
-		return builder.toString();
+
+		String resultString = builder.toString();
+		logger.info(resultString);
+
+		return resultString;
+	}
+
+	String getClasspathJdk9() {
+		String classpath = System.getProperty("java.class.path");
+		String[] entries = classpath.split(File.pathSeparator);
+		URL[] result = new URL[entries.length];
+		for (int i = 0; i < entries.length; i++) {
+			try {
+				result[i] = Paths.get(entries[i]).toAbsolutePath().toUri().toURL();
+			} catch (MalformedURLException e) {
+				logger.error(e.getStackTrace().toString());
+			}
+		}
+
+		return Arrays.toString(result);
 	}
 
 	public void after() throws Exception {
 		if (started != null && started.isAlive()) {
-			System.err.println(
-					"Stopped " + mainClass + ": " + started.destroyForcibly().waitFor());
+			System.err.println("Stopped " + mainClass + ": " + started.destroyForcibly().waitFor());
 		}
 	}
 
 	public void run() throws Exception {
 		List<String> args = new ArrayList<>(this.args);
-		if (jvmArgs!=null) {
+		if (jvmArgs != null) {
 			args.addAll(1, this.jvmArgs);
 		}
 		args.add(args.size() - this.length, this.mainClass);
-		if (progArgs!=null) {
+		if (progArgs != null) {
 			args.addAll(progArgs);
 		}
 		ProcessBuilder builder = new ProcessBuilder(args);
@@ -114,8 +138,7 @@ public class ProcessLauncherState {
 		System.out.println(output(started.getInputStream(), "Started"));
 	}
 
-	protected static String output(InputStream inputStream, String marker)
-			throws IOException {
+	protected static String output(InputStream inputStream, String marker) throws IOException {
 		StringBuilder sb = new StringBuilder();
 		BufferedReader br = null;
 		br = new BufferedReader(new InputStreamReader(inputStream));
