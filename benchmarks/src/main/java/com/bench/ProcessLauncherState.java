@@ -94,6 +94,7 @@ public class ProcessLauncherState {
 		String classpath = System.getProperty("java.class.path");
 		String[] entries = classpath.split(File.pathSeparator);
 		URL[] result = new URL[entries.length];
+
 		for (int i = 0; i < entries.length; i++) {
 			try {
 				result[i] = Paths.get(entries[i]).toAbsolutePath().toUri().toURL();
@@ -102,11 +103,16 @@ public class ProcessLauncherState {
 			}
 		}
 
-		String resultString = Arrays.toString(result);
+		StringBuilder builder = new StringBuilder();
 
-		resultString = resultString.replaceAll(", ", ":");
-		resultString = resultString.replace('[', ' ');
-		resultString = resultString.replace(']', ' ');
+		for (int i = 0; i < result.length; i++) {
+			if (builder.length() > 0) {
+				builder.append(File.pathSeparator);
+			}
+			builder.append(result[i]);
+		}
+
+		String resultString = builder.toString();
 
 		logger.info("Result Classpath: " + resultString);
 
