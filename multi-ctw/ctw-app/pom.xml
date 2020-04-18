@@ -14,14 +14,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.1.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<version>2.2.4.RELEASE</version>
+		<relativePath /> 
 	</parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 		<thin-jar.version>1.0.20.RELEASE</thin-jar.version>
 		<spring-boot-aspects.version>1.0.0.BUILD-SNAPSHOT</spring-boot-aspects.version>
 	</properties>
@@ -78,7 +78,7 @@
 								<pluginExecution>
 									<pluginExecutionFilter>
 										<groupId>
-											org.codehaus.mojo
+											com.nickwongdev
 										</groupId>
 										<artifactId>
 											aspectj-maven-plugin
@@ -106,9 +106,9 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
+				<groupId>com.nickwongdev</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.10</version>
+				<version>1.12.6</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
