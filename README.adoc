@@ -6,6 +6,8 @@ AspectJ lets you write aspects using Java annotations `@Aspect` and friends. Con
 
 Luckily, it is quite easy to set up AspectJ to weave your code natively (not with Spring), and it is sometimes faster - just more steps to set up. In fact, there are multiple ways of using AspectJ to weave your code, some of which happen at runtime, and one (broadly speaking) that happens at compile time. Compile time is faster (unsurprisingly), but not massively (heuristically, maybe a 20% effect).
 
+NOTE: The projects are updated with AspectJ 1.9.5 (included with Spring Boot 2.2.4) and use OpenJDK 11 now.
+
 NOTE: AspectJ 1.8.13 (included with Spring Boot 1.5.9) has some major performance improvements affecting Spring AOP - the optimizations were suggested by running the benchmarks in this project. If you think Spring AOP might be slowing your app down on startup, upgrade now.
 
 == Contents
