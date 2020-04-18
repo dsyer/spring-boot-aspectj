@@ -32,19 +32,19 @@ public class Interceptor {
 			+ " && (within(org.springframework.context.annotation.Condition+) || within(com.example..*))")
 	public Object intercept(ProceedingJoinPoint joinPoint) throws Throwable {
 		Object result = joinPoint.proceed();
-		logger.error("AspectJ intercept: " + joinPoint.toShortString() + ": " + result);
+		logger.debug("AspectJ intercept: " + joinPoint.toShortString() + ": " + result);
 		return result;
 	}
 
 	@Around("execution(* *(..)) && within(com.example..*) && !within(com.example.Interceptor+)")
 	public Object stack(ProceedingJoinPoint joinPoint) throws Throwable {
-		logger.error("AspectJ stack: " + joinPoint.toShortString());
+		logger.debug("AspectJ stack: " + joinPoint.toShortString());
 		return joinPoint.proceed();
 	}
 
 	@EventListener
 	public void started(ContextRefreshedEvent event) {
-		logger.error("AspectJ started: " + message + ": " + event);
+		logger.debug("AspectJ started: " + message + ": " + event);
 	}
 
 }

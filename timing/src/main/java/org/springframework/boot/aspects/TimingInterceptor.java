@@ -20,7 +20,6 @@ import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.util.StopWatch;
@@ -47,8 +46,7 @@ public class TimingInterceptor {
 		bind.start();
 		Object result = joinPoint.proceed();
 		bind.stop();
-		logger.info("Bind,," + bean.getClass().getName() + ": "
-				+ bind.getLastTaskTimeMillis());
+		logger.debug("Bind,," + bean.getClass().getName() + ": " + bind.getLastTaskTimeMillis());
 		return result;
 	}
 
@@ -57,9 +55,8 @@ public class TimingInterceptor {
 		long t0 = System.currentTimeMillis();
 		Object result = joinPoint.proceed();
 		long t1 = System.currentTimeMillis();
-		logger.info("Post," + joinPoint.getSignature().getDeclaringType().getSimpleName()
-				+ "." + joinPoint.getSignature().getName() + ","
-				+ bean.getClass().getName() + "," + (t1 - t0));
+		logger.debug("Post," + joinPoint.getSignature().getDeclaringType().getSimpleName() + "."
+				+ joinPoint.getSignature().getName() + "," + bean.getClass().getName() + "," + (t1 - t0));
 		return result;
 	}
 
@@ -78,8 +75,7 @@ public class TimingInterceptor {
 		if (task != null) {
 			app.start(task);
 		}
-		logger.info("App," + level + "," + joinPoint.getSignature().getName() + ","
-				+ (t1 - t0));
+		logger.debug("App," + level + "," + joinPoint.getSignature().getName() + "," + (t1 - t0));
 		level--;
 		return result;
 	}
@@ -89,15 +85,13 @@ public class TimingInterceptor {
 		long t0 = System.currentTimeMillis();
 		Object result = joinPoint.proceed();
 		long t1 = System.currentTimeMillis();
-		logger.info("Strategies,"
-				+ joinPoint.getSignature().getDeclaringType().getSimpleName() + "."
+		logger.debug("Strategies," + joinPoint.getSignature().getDeclaringType().getSimpleName() + "."
 				+ joinPoint.getSignature().getName() + "," + (t1 - t0));
 		return result;
 	}
 
 	@Around("execution(* org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory+.initializeBean(String, Object, ..)) && args(name,bean,..)")
-	public Object init(ProceedingJoinPoint joinPoint, String name, Object bean)
-			throws Throwable {
+	public Object init(ProceedingJoinPoint joinPoint, String name, Object bean) throws Throwable {
 		String task = init.currentTaskName();
 		if (task != null) {
 			init.stop();
@@ -111,18 +105,17 @@ public class TimingInterceptor {
 		init.stop();
 		if (task != null) {
 			init.start(task);
-		}
-		else {
-			logger.info("Init,," + bean.getClass().getName() + "," + (t1 - t0));
-			logger.info("Count,," + bean.getClass().getName() + "," + (count1 - count0));
+		} else {
+			logger.debug("Init,," + bean.getClass().getName() + "," + (t1 - t0));
+			logger.debug("Count,," + bean.getClass().getName() + "," + (count1 - count0));
 		}
 		return result;
 	}
 
 	@EventListener
 	public void started(ContextRefreshedEvent event) {
-		logger.info("Total bind: " + bind.getTotalTimeMillis());
-		logger.info("Total init: " + init.getTotalTimeMillis());
+		logger.debug("Total bind: " + bind.getTotalTimeMillis());
+		logger.debug("Total init: " + init.getTotalTimeMillis());
 	}
 
 }
