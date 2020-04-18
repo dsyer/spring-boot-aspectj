@@ -24,7 +24,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>11</java.version>
 		<thin-jar.version>1.0.20.RELEASE</thin-jar.version>
-		<spring-boot-aspects.version>1.0.0.BUILD-SNAPSHOT</spring-boot-aspects.version>
+		<timing.version>1.0.0-SNAPSHOT</timing.version>
 	</properties>
 
 	<dependencies>
@@ -38,9 +38,9 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot.experimental</groupId>
-			<artifactId>spring-boot-aspects</artifactId>
-			<version>${spring-boot-aspects.version}</version>
+			<groupId>com.example</groupId>
+			<artifactId>timing</artifactId>
+			<version>${timing.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
