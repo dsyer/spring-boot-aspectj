@@ -1,4 +1,4 @@
-# Sample app showing how to use AspectJ natively with `@Aspect` and Spring Boot.
+### Sample app showing how to use AspectJ natively with `@Aspect` and Spring Boot.
 
 [![Build Status](https://travis-ci.org/lofidewanto/spring-boot-aspectj.svg?branch=master)](https://travis-ci.org/lofidewanto/spring-boot-aspectj)
 
