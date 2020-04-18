@@ -1,3 +1,35 @@
+== AspectJ 1.9.5 OpenJDK 11
+
+```
+Result "com.bench.StartupBenchmark.spring":
+  3,539 ±(99.9%) 0,390 s/op [Average]
+  (min, avg, max) = (3,173, 3,539, 3,885), stdev = 0,258
+  CI (99.9%): [3,149, 3,929] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:29:58
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+Benchmark                 (scale)  Mode  Cnt  Score   Error  Units
+StartupBenchmark.ltw          N/A  avgt   10  2,467 ± 0,256   s/op
+StartupBenchmark.ltw_100      N/A  avgt   10  2,742 ± 0,530   s/op
+StartupBenchmark.spring     v0_10  avgt   10  1,707 ± 0,090   s/op
+StartupBenchmark.spring     v1_10  avgt   10  2,098 ± 0,923   s/op
+StartupBenchmark.spring    v1_100  avgt   10  2,031 ± 0,169   s/op
+StartupBenchmark.spring    v10_50  avgt   10  2,885 ± 0,303   s/op
+StartupBenchmark.spring    v20_50  avgt   10  3,961 ± 0,466   s/op
+StartupBenchmark.spring     a0_10  avgt   10  2,304 ± 0,445   s/op
+StartupBenchmark.spring     a1_10  avgt   10  2,652 ± 0,692   s/op
+StartupBenchmark.spring    a1_100  avgt   10  2,666 ± 0,491   s/op
+StartupBenchmark.spring    a10_50  avgt   10  3,087 ± 0,277   s/op
+StartupBenchmark.spring   a10_100  avgt   10  3,379 ± 1,037   s/op
+StartupBenchmark.spring    a20_50  avgt   10  3,539 ± 0,390   s/op
+```
 
 == AspectJ 1.8.11 Snapshots
 
