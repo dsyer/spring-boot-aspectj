@@ -1,6 +1,6 @@
 ### Sample app showing how to use AspectJ natively with `@Aspect` and Spring Boot.
 
-[![Build Status](https://travis-ci.com/lofidewanto/spring-boot-aspectj.svg?branch=master)](https://travis-ci.com/lofidewanto/spring-boot-aspectj)
+image:https://travis-ci.com/lofidewanto/spring-boot-aspectj.svg?branch=master["Build Status", link="https://travis-ci.com/lofidewanto/spring-boot-aspectj"]
 
 AspectJ lets you write aspects using Java annotations `@Aspect` and friends. Conveniently, but sometimes confusingly, Spring lets you use the same programming model, and then uses the AspectJ tooling APIs at runtime, so some people can't tell the difference between Spring AOP and AspectJ. You don't need any special tools to use Spring AOP, but it has it's limitations, one of which is performance (you take a hit on startup while all the beans are analysed, and you take another smaller hit when the app is running and one of your aspects is executed through a proxy).
 
