@@ -133,11 +133,11 @@ To run in the IDE you need to add the agent to your launch configuration.
 
 Note that you could add `@EnableLoadTimeWeaving` to the main application class, but it should probably be removed, as it's misleading.
 
-There's an open issue asking for `@EnableLoadTimeWeaving` support in Spring Boot, and a user who says he made it work with a `PropertiesLauncher` (because it can set the class loader really early): https://github.com/spring-projects/spring-boot/issues/739. It doesn't work to set the classloader in the main method because too many Spring Boot classes have already been loaded by then, but there is a trick you can play with [attaching the agent at runtime](http://www.eclipse.org/aspectj/doc/released/README-187.html) (in which case all classes loaded up to that point can not be woven).
+There's an open issue asking for `@EnableLoadTimeWeaving` support in Spring Boot, and a user who says he made it work with a `PropertiesLauncher` (because it can set the class loader really early): https://github.com/spring-projects/spring-boot/issues/739. It doesn't work to set the classloader in the main method because too many Spring Boot classes have already been loaded by then, but there is a trick you can play with http://www.eclipse.org/aspectj/doc/released/README-187.html[attaching the agent at runtime] (in which case all classes loaded up to that point can not be woven).
 
 NOTE: You can enable logging of the weaving using `-Daj.weaving.verbose=true`.
 
-Useful links:
+== Useful links
 
 * http://stackoverflow.com/questions/21350966/using-autowired-with-aspectj-and-springboot/21367986
 * http://www.eclipse.org/aspectj/doc/released/README-187.html
