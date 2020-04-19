@@ -106,6 +106,8 @@ $ mvn clean install
 $ java -jar target/*.jar
 ```
 
+NOTE: for Java 11 you cannot use org.codehaus.mojo::aspectj-maven-plugin because the plugin is not developed anymore, see https://github.com/mojohaus/aspectj-maven-plugin/issues/49. Instead use https://github.com/nickwongdev/aspectj-maven-plugin with com.nickwongdev::aspectj-maven-plugin
+
 NOTE: in the plugin configuration above, we haven't asked AspectJ to weave the dependencies, and it won't do that by default. Consequently we won't see as much output from the app when it runs as we did with the runtime weaving (where all the classes were available for weaving as soon as they were loaded).
 
 NOTE: AspectJ is smart enough not to try and weave the same class twice, so you can always add the agent at runtime even when the application classes are already woven. That would be one way to pick up additional join points that you hadn't woven at compile time.
