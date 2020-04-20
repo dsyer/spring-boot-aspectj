@@ -1,6 +1,6 @@
-== Benchmarks
+= Benchmarks
 
-=== How to run
+== How to run
 
 You need to have Java 11 to run the benchmarks. The Exec Maven Plugin will run the benschmarks.jar file to start the benchmarking process:
 
@@ -15,6 +15,8 @@ Outside Maven after building the benchmarks.jar you can just run:
 $ cd benchmarks
 $ java -jar target/benchmarks.jar
 ```
+
+= Results
 
 == AspectJ 1.9.5 OpenJDK 11
 
