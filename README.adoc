@@ -54,7 +54,7 @@ E.g. :
 ```
 $ cd ltw
 $ mvn clean install
-$ java -javaagent:$HOME/.m2/repository/org/aspectj/aspectjweaver/1.8.13/aspectjweaver-1.8.13.jar -jar target/*.jar
+$ java -javaagent:$HOME/.m2/repository/org/aspectj/aspectjweaver/[version]/aspectjweaver-[version].jar -jar target/*.jar
 ```
 
 If you don't add the agent (and don't provide an implementation of `Interceptor.aspectOf()`) you might get a confusing "cyclic dependency" error from Spring on startup. It's not really cyclic, but because the `Interceptor` in this sample is an `@EventListener` Spring is trying to create it very early and gets confused. The real problem is just that `Aspects.aspectOf()` doesn't work unless the agent is attached.
@@ -131,7 +131,7 @@ execution(InterceptorApplication..EnhancerBySpringCGLIB..8ce66f62.setBeanFactory
 To run in the IDE you need to add the agent to your launch configuration.
 
 ```
--javaagent:${system_property:user.home}/.m2/repository/org/aspectj/aspectjweaver/1.8.13/aspectjweaver-1.8.13.jar
+-javaagent:${system_property:user.home}/.m2/repository/org/aspectj/aspectjweaver/[version]/aspectjweaver-[version].jar
 ```
 
 Note that you could add `@EnableLoadTimeWeaving` to the main application class, but it should probably be removed, as it's misleading.
@@ -139,6 +139,15 @@ Note that you could add `@EnableLoadTimeWeaving` to the main application class, 
 There's an open issue asking for `@EnableLoadTimeWeaving` support in Spring Boot, and a user who says he made it work with a `PropertiesLauncher` (because it can set the class loader really early): https://github.com/spring-projects/spring-boot/issues/739. It doesn't work to set the classloader in the main method because too many Spring Boot classes have already been loaded by then, but there is a trick you can play with http://www.eclipse.org/aspectj/doc/released/README-187.html[attaching the agent at runtime] (in which case all classes loaded up to that point can not be woven).
 
 NOTE: You can enable logging of the weaving using `-Daj.weaving.verbose=true`.
+
+== Run the CTW sample
+
+```
+$ cd ctw
+$ mvn spring-boot:run
+```
+
+The compile time weaving example does not need any Java agent.
 
 == Useful links
 
