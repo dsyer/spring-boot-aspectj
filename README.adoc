@@ -70,7 +70,7 @@ To weave the aspects at compile time (and also optionally use the AspectJ langua
 [source,xml]
 ----
 <plugin>
-  <groupId>org.codehaus.mojo</groupId>
+  <groupId>org.codehaus.mojo</groupId>                   <3>
   <artifactId>aspectj-maven-plugin</artifactId>
   <version>1.10</version>
   <configuration>
@@ -97,6 +97,7 @@ To weave the aspects at compile time (and also optionally use the AspectJ langua
 ----
 <1> Useful if you have annotation processors (like Spring Boot configuration processor), to avoid them being processed again by the AspectJ compiler.
 <2> Optionally update the AspectJ tooling to the latest version. The `aspectrt` jar has to be included separately.
+<3> See the note below for Java 11
 
 In this sample build the app with the `weave` profile to run this plugin. E.g.
 
@@ -141,8 +142,10 @@ NOTE: You can enable logging of the weaving using `-Daj.weaving.verbose=true`.
 
 == Useful links
 
-* http://stackoverflow.com/questions/21350966/using-autowired-with-aspectj-and-springboot/21367986
-* http://www.eclipse.org/aspectj/doc/released/README-187.html
+* https://stackoverflow.com/questions/21350966/using-autowired-with-aspectj-and-springboot/21367986
+* https://stackoverflow.com/questions/12423965/maven-aspectj-all-steps-to-configure-it
+* https://stackoverflow.com/questions/40472614/simple-configurable-with-modern-spring-boot-gradle
+* https://www.eclipse.org/aspectj/doc/released/README-187.html
 * https://github.com/spring-projects/spring-boot/issues/6626
 * https://github.com/spring-projects/spring-boot/issues/7587
 * https://github.com/spring-projects/spring-boot/issues/739
