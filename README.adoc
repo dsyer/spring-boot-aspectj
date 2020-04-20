@@ -18,7 +18,7 @@ NOTE: AspectJ 1.8.13 (included with Spring Boot 1.5.9) has some major performanc
 * multi-ltw = Load Time Weaving multi-module sample. Aspects and application code in separate modules.
 * multi-ctw = Compile Time Weaving multi-module sample. Aspects and application code in separate modules. The aspect library (as well as the application) has to be processed by AspectJ at build time.
 * timing = A utility library for logging timing data on startup for some internal features of Spring and Spring Boot
-* benchmarks = benchmarks for using AspectJ with the help of https://www.baeldung.com/java-microbenchmark-harness[JMH (Java Microbenchmark Harness)] for example of how to do microbenchmarking in Java
+* benchmarks = benchmarks for using AspectJ with the help of https://www.baeldung.com/java-microbenchmark-harness[JMH (Java Microbenchmark Harness)] for example of how to do microbenchmarking in Java. Also this article about http://tutorials.jenkov.com/java-performance/jmh.html[JMH] is a good place to start.
 
 == Converting from Spring AOP to AspectJ
 
