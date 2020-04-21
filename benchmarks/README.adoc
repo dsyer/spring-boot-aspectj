@@ -18,7 +18,7 @@ $ java -jar target/benchmarks.jar
 
 = Results
 
-== macBook Lofi Dewanto Result
+== macBook Lofi Dewanto Result April 2020
 
 === AspectJ 1.9.5, OpenJDK 11, JMH 1.23, Spring Boot 2.2.4
 
@@ -27,7 +27,6 @@ Result "com.bench.StartupBenchmark.spring":
   3,539 ±(99.9%) 0,390 s/op [Average]
   (min, avg, max) = (3,173, 3,539, 3,885), stdev = 0,258
   CI (99.9%): [3,149, 3,929] (assumes normal distribution)
-
 
 # Run complete. Total time: 00:29:58
 
@@ -60,7 +59,6 @@ Result "spring":
   2,918 ±(99.9%) 0,056 s/op [Average]
   (min, avg, max) = (2,862, 2,918, 2,971), stdev = 0,037
   CI (99.9%): [2,862, 2,975] (assumes normal distribution)
-
 
 # Run complete. Total time: 00:06:06
 
