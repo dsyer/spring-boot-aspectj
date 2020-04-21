@@ -19,6 +19,8 @@ $ java -jar target/benchmarks.jar
 = Results
 
 == macBook Lofi Dewanto Result April 2020
+- CPU: 2.7 GHz Quad-Core Intel Core i7
+- Memory: 16 GB 2133 MHz LPDDR3
 
 === AspectJ 1.9.5, OpenJDK 11, JMH 1.23, Spring Boot 2.2.4
 
@@ -52,7 +54,7 @@ StartupBenchmark.spring   a10_100  avgt   10  3,379 ± 1,037   s/op
 StartupBenchmark.spring    a20_50  avgt   10  3,539 ± 0,390   s/op
 ```
 
-=== AspectJ 1.9.2, Oracle JDK 1.8, JMH 1.16, Spring Boot 2.1.1
+=== AspectJ 1.9.2, Oracle JDK 1.8, JMH 1.16, Spring Boot 2.1.1 -- Original Source before Move to newer Versions
 
 ```
 Result "spring":
