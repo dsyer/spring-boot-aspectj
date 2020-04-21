@@ -18,7 +18,9 @@ $ java -jar target/benchmarks.jar
 
 = Results
 
-== AspectJ 1.9.5 OpenJDK 11
+== macBook Lofi Dewanto Result
+
+=== AspectJ 1.9.5, OpenJDK 11, JMH 1.23, Spring Boot 2.2.4
 
 ```
 Result "com.bench.StartupBenchmark.spring":
@@ -51,7 +53,36 @@ StartupBenchmark.spring   a10_100  avgt   10  3,379 ± 1,037   s/op
 StartupBenchmark.spring    a20_50  avgt   10  3,539 ± 0,390   s/op
 ```
 
-== AspectJ 1.8.11 Snapshots
+=== AspectJ 1.9.2, Oracle JDK 1.8, JMH 1.16, Spring Boot 2.1.1
+
+```
+Result "spring":
+  2,918 ±(99.9%) 0,056 s/op [Average]
+  (min, avg, max) = (2,862, 2,918, 2,971), stdev = 0,037
+  CI (99.9%): [2,862, 2,975] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:06:06
+
+Benchmark                 (scale)  Mode  Cnt  Score    Error  Units
+StartupBenchmark.ltw          N/A  avgt   10  0,017 ±  0,001   s/op
+StartupBenchmark.ltw_100      N/A  avgt   10  0,017 ±  0,001   s/op
+StartupBenchmark.spring     v0_10  avgt   10  2,158 ±  0,131   s/op
+StartupBenchmark.spring     v1_10  avgt   10  2,235 ±  0,056   s/op
+StartupBenchmark.spring    v1_100  avgt   10  2,273 ±  0,076   s/op
+StartupBenchmark.spring    v10_50  avgt   10  2,908 ±  0,055   s/op
+StartupBenchmark.spring    v20_50  avgt   10  3,622 ±  0,041   s/op
+StartupBenchmark.spring     a0_10  avgt   10  2,083 ±  0,054   s/op
+StartupBenchmark.spring     a1_10  avgt   10  2,183 ±  0,040   s/op
+StartupBenchmark.spring    a1_100  avgt   10  2,219 ±  0,041   s/op
+StartupBenchmark.spring    a10_50  avgt   10  2,539 ±  0,044   s/op
+StartupBenchmark.spring   a10_100  avgt   10  2,567 ±  0,034   s/op
+StartupBenchmark.spring    a20_50  avgt   10  2,918 ±  0,056   s/op
+```
+
+== Older Results
+
+=== AspectJ 1.8.11 Snapshots
 
 (Seems to fix the problem with Spring AOP.)
 
@@ -72,7 +103,7 @@ StartupBenchmark.spring   a10_100  avgt   10  1.890 ± 0.060   s/op
 StartupBenchmark.spring    a20_50  avgt   10  2.121 ± 0.083   s/op
 ```
 
-== AspectJ 1.8.10
+=== AspectJ 1.8.10
 
 ```
 Benchmark                        Mode  Cnt   Score   Error  Units
