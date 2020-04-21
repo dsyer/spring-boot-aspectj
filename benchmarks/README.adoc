@@ -19,6 +19,8 @@ $ java -jar target/benchmarks.jar
 = Results
 
 == macBook Lofi Dewanto Result April 2020
+- CPU: 2,7 GHz Quad-Core Intel Core i7
+- Memory: 16 GB 2133 MHz LPDDR3
 
 === AspectJ 1.9.5, OpenJDK 11, JMH 1.23, Spring Boot 2.2.4
 
