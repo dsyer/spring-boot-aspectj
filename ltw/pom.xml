@@ -23,7 +23,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>11</java.version>
-		<thin-jar.version>1.0.20.RELEASE</thin-jar.version>
+		<thin-jar.version>1.0.24.RELEASE</thin-jar.version>
 	</properties>
 
 	<dependencies>
@@ -63,9 +63,9 @@
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-maven-plugin</artifactId>
 					<configuration>
-						<agent>
+						<agents>
 							<aspectj>${project.build.directory}/aspectj/aspectjweaver-${aspectj.version}.jar</aspectj>
-						</agent>
+						</agents>
 					</configuration>
 					<dependencies>
 						<dependency>
