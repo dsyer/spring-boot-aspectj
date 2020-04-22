@@ -15,11 +15,11 @@
  */
 package org.springframework.boot.aspects;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.util.StopWatch;
@@ -31,7 +31,7 @@ import org.springframework.util.StopWatch;
 @Aspect
 public class TimingInterceptor {
 
-	private static Log logger = LogFactory.getLog(TimingInterceptor.class);
+	private static final Logger logger = LoggerFactory.getLogger(TimingInterceptor.class);
 
 	private StopWatch bind = new StopWatch("bind");
 
