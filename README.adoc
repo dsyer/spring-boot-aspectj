@@ -140,7 +140,7 @@ There's an open issue asking for `@EnableLoadTimeWeaving` support in Spring Boot
 
 NOTE: You can enable logging of the weaving using `-Daj.weaving.verbose=true`.
 
-== Run the CTW sample
+== Run the CTW Sample
 
 ```
 $ cd ctw
@@ -149,7 +149,7 @@ $ mvn spring-boot:run
 
 The compile time weaving example does not need any Java agent.
 
-== Useful links
+== Useful Links
 
 * https://stackoverflow.com/questions/21350966/using-autowired-with-aspectj-and-springboot/21367986
 * https://stackoverflow.com/questions/12423965/maven-aspectj-all-steps-to-configure-it
