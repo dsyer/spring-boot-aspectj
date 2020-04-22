@@ -57,6 +57,12 @@ $ mvn clean install
 $ java -javaagent:$HOME/.m2/repository/org/aspectj/aspectjweaver/[version]/aspectjweaver-[version].jar -jar target/*.jar
 ```
 
+You can also use the copied version of aspectweaver-[version].jar in the target/aspectj directory of the Maven project, since it is copied to that directory with Maven Dependency plugin.
+
+```
+$ java -javaagent:target/aspectj/aspectjweaver-[version].jar -jar target/*.jar
+```
+
 If you don't add the agent (and don't provide an implementation of `Interceptor.aspectOf()`) you might get a confusing "cyclic dependency" error from Spring on startup. It's not really cyclic, but because the `Interceptor` in this sample is an `@EventListener` Spring is trying to create it very early and gets confused. The real problem is just that `Aspects.aspectOf()` doesn't work unless the agent is attached.
 
 NOTE: `@EnableLoadTimeWeaving` doesn't actually make much sense in a Spring Boot app that is going to run in its own process - you can just add the AspectJ agent. Many people confuse "load time weaving" with "runtime weaving" generally (because for a long time it was the only option for many Spring apps). So if someone asks you to implement "load time weaving" in a Spring Boot app, just add the agent.
