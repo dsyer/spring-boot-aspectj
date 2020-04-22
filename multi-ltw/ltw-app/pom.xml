@@ -99,9 +99,9 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<agent>
+					<agents>
 						<aspectj>${project.build.directory}/aspectj/aspectjweaver-${aspectj.version}.jar</aspectj>
-					</agent>
+					</agents>
 				</configuration>
 			</plugin>
 			<plugin>
