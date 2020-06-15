@@ -34,6 +34,8 @@ import org.openjdk.jmh.annotations.Warmup;
 @BenchmarkMode(Mode.AverageTime)
 public class StartupBenchmark {
 
+	private static final String M2_REPOSITORY_ASPECTJWEAVER = "/.m2/repository/org/aspectj/aspectjweaver/1.9.5/aspectjweaver-1.9.5.jar";
+
 	@Benchmark
 	public void spring(SpringState state) throws Exception {
 		state.run();
@@ -42,16 +44,14 @@ public class StartupBenchmark {
 	@Benchmark
 	public void ltw(ApplicationState state) throws Exception {
 		state.setProgArgs("--spring.aop.auto=false");
-		state.setJvmArgs("-javaagent:" + home()
-				+ "/.m2/repository/org/aspectj/aspectjweaver/1.8.11.BUILD-SNAPSHOT/aspectjweaver-1.8.11.BUILD-SNAPSHOT.jar");
+		state.setJvmArgs("-javaagent:" + home() + M2_REPOSITORY_ASPECTJWEAVER);
 		state.run();
 	}
 
 	@Benchmark
 	public void ltw_100(ApplicationState state) throws Exception {
 		state.setProgArgs("--bench.beans=100", "--spring.aop.auto=false");
-		state.setJvmArgs("-javaagent:" + home()
-				+ "/.m2/repository/org/aspectj/aspectjweaver/1.8.11.BUILD-SNAPSHOT/aspectjweaver-1.8.11.BUILD-SNAPSHOT.jar");
+		state.setJvmArgs("-javaagent:" + home() + M2_REPOSITORY_ASPECTJWEAVER);
 		state.run();
 	}
 
@@ -63,10 +63,10 @@ public class StartupBenchmark {
 	public static class SpringState extends ProcessLauncherState {
 
 		public static enum Scale {
-			v0_10(0, 10), v1_10(1, 10), v1_100(1, 100), v10_50(10, 50), v20_50(20,
-					50), a0_10(0, 10, true), a1_10(1, 10, true), a1_100(1, 100,
-							true), a10_50(10, 50,
-									true), a10_100(10, 100, true), a20_50(20, 50, true);
+			v0_10(0, 10), v1_10(1, 10), v1_100(1, 100), v10_50(10, 50), v20_50(20, 50), a0_10(0, 10, true),
+			a1_10(1, 10, true), a1_100(1, 100, true), a10_50(10, 50, true), a10_100(10, 100, true),
+			a20_50(20, 50, true);
+
 			private int beans;
 			private int aspects;
 			private boolean annotation;
@@ -82,8 +82,8 @@ public class StartupBenchmark {
 			}
 
 			public String[] getArgs() {
-				return new String[] { "--server.port=0", "--bench.aspects=" + aspects,
-						"--bench.beans=" + beans, "--bench.annotation=" + annotation };
+				return new String[] { "--server.port=0", "--bench.aspects=" + aspects, "--bench.beans=" + beans,
+						"--bench.annotation=" + annotation };
 			}
 		}
 

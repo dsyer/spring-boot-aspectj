@@ -15,12 +15,11 @@
  */
 package org.springframework.boot.aspects;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.util.StopWatch;
@@ -32,7 +31,7 @@ import org.springframework.util.StopWatch;
 @Aspect
 public class TimingInterceptor {
 
-	private static Log logger = LogFactory.getLog(TimingInterceptor.class);
+	private static final Logger logger = LoggerFactory.getLogger(TimingInterceptor.class);
 
 	private StopWatch bind = new StopWatch("bind");
 
@@ -47,8 +46,7 @@ public class TimingInterceptor {
 		bind.start();
 		Object result = joinPoint.proceed();
 		bind.stop();
-		logger.info("Bind,," + bean.getClass().getName() + ": "
-				+ bind.getLastTaskTimeMillis());
+		logger.debug("Bind,," + bean.getClass().getName() + ": " + bind.getLastTaskTimeMillis());
 		return result;
 	}
 
@@ -96,8 +94,7 @@ public class TimingInterceptor {
 	}
 
 	@Around("execution(* org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory+.initializeBean(String, Object, ..)) && args(name,bean,..)")
-	public Object init(ProceedingJoinPoint joinPoint, String name, Object bean)
-			throws Throwable {
+	public Object init(ProceedingJoinPoint joinPoint, String name, Object bean) throws Throwable {
 		String task = init.currentTaskName();
 		if (task != null) {
 			init.stop();
@@ -122,8 +119,8 @@ public class TimingInterceptor {
 
 	@EventListener
 	public void started(ContextRefreshedEvent event) {
-		logger.info("Total bind: " + bind.getTotalTimeMillis());
-		logger.info("Total init: " + init.getTotalTimeMillis());
+		logger.debug("Total bind: " + bind.getTotalTimeMillis());
+		logger.debug("Total init: " + init.getTotalTimeMillis());
 	}
 
 }

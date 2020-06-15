@@ -1,8 +1,12 @@
-Sample app showing how to use AspectJ natively with `@Aspect` and Spring Boot.
+== Sample Apps Showing How to Use AspectJ Natively with `@Aspect` and Spring Boot
+
+image:https://travis-ci.com/lofidewanto/spring-boot-aspectj.svg?branch=master["Build Status", link="https://travis-ci.com/lofidewanto/spring-boot-aspectj"]
 
 AspectJ lets you write aspects using Java annotations `@Aspect` and friends. Conveniently, but sometimes confusingly, Spring lets you use the same programming model, and then uses the AspectJ tooling APIs at runtime, so some people can't tell the difference between Spring AOP and AspectJ. You don't need any special tools to use Spring AOP, but it has it's limitations, one of which is performance (you take a hit on startup while all the beans are analysed, and you take another smaller hit when the app is running and one of your aspects is executed through a proxy).
 
-Luckily, it is quite easy to set up AspectJ to weave your code natively (not with Spring), and it is sometimes faster - just more steps to set up. In fact, there are multiple ways of using AspectJ to weave your code, some of which happen at runtime, and one (broadly speaking) that happens at compile time. Comile time is faster (unsurprisingly), but not massively (heuristically, maybe a 20% effect).
+Luckily, it is quite easy to set up AspectJ to weave your code natively (not with Spring), and it is sometimes faster - just more steps to set up. In fact, there are multiple ways of using AspectJ to weave your code, some of which happen at runtime, and one (broadly speaking) that happens at compile time. Compile time is faster (unsurprisingly), but not massively (heuristically, maybe a 20% effect).
+
+NOTE: The projects are updated with AspectJ 1.9.5 (included with Spring Boot 2.2.4) and use OpenJDK 11 now.
 
 NOTE: AspectJ 1.8.13 (included with Spring Boot 1.5.9) has some major performance improvements affecting Spring AOP - the optimizations were suggested by running the benchmarks in this project. If you think Spring AOP might be slowing your app down on startup, upgrade now.
 
@@ -14,6 +18,7 @@ NOTE: AspectJ 1.8.13 (included with Spring Boot 1.5.9) has some major performanc
 * multi-ltw = Load Time Weaving multi-module sample. Aspects and application code in separate modules.
 * multi-ctw = Compile Time Weaving multi-module sample. Aspects and application code in separate modules. The aspect library (as well as the application) has to be processed by AspectJ at build time.
 * timing = A utility library for logging timing data on startup for some internal features of Spring and Spring Boot
+* benchmarks = benchmarks for using AspectJ with the help of https://www.baeldung.com/java-microbenchmark-harness[JMH (Java Microbenchmark Harness)] for example of how to do microbenchmarking in Java. Also this article about http://tutorials.jenkov.com/java-performance/jmh.html[JMH] is a good place to start.
 
 == Converting from Spring AOP to AspectJ
 
@@ -49,7 +54,13 @@ E.g. :
 ```
 $ cd ltw
 $ mvn clean install
-$ java -javaagent:$HOME/.m2/repository/org/aspectj/aspectjweaver/1.8.13/aspectjweaver-1.8.13.jar -jar target/*.jar
+$ java -javaagent:$HOME/.m2/repository/org/aspectj/aspectjweaver/[version]/aspectjweaver-[version].jar -jar target/*.jar
+```
+
+You can also use the copied version of aspectweaver-[version].jar in the target/aspectj directory of the Maven project, since it is copied to that directory with Maven Dependency plugin.
+
+```
+$ java -javaagent:target/aspectj/aspectjweaver-[version].jar -jar target/*.jar
 ```
 
 If you don't add the agent (and don't provide an implementation of `Interceptor.aspectOf()`) you might get a confusing "cyclic dependency" error from Spring on startup. It's not really cyclic, but because the `Interceptor` in this sample is an `@EventListener` Spring is trying to create it very early and gets confused. The real problem is just that `Aspects.aspectOf()` doesn't work unless the agent is attached.
@@ -65,7 +76,7 @@ To weave the aspects at compile time (and also optionally use the AspectJ langua
 [source,xml]
 ----
 <plugin>
-  <groupId>org.codehaus.mojo</groupId>
+  <groupId>org.codehaus.mojo</groupId>                   <3>
   <artifactId>aspectj-maven-plugin</artifactId>
   <version>1.10</version>
   <configuration>
@@ -92,6 +103,7 @@ To weave the aspects at compile time (and also optionally use the AspectJ langua
 ----
 <1> Useful if you have annotation processors (like Spring Boot configuration processor), to avoid them being processed again by the AspectJ compiler.
 <2> Optionally update the AspectJ tooling to the latest version. The `aspectrt` jar has to be included separately.
+<3> See the note below for Java 11
 
 In this sample build the app with the `weave` profile to run this plugin. E.g.
 
@@ -100,6 +112,8 @@ $ cd ctw
 $ mvn clean install
 $ java -jar target/*.jar
 ```
+
+NOTE: for Java 11 you cannot use org.codehaus.mojo::aspectj-maven-plugin because the plugin is not developed anymore, see https://github.com/mojohaus/aspectj-maven-plugin/issues/49. Instead use https://github.com/nickwongdev/aspectj-maven-plugin with com.nickwongdev::aspectj-maven-plugin
 
 NOTE: in the plugin configuration above, we haven't asked AspectJ to weave the dependencies, and it won't do that by default. Consequently we won't see as much output from the app when it runs as we did with the runtime weaving (where all the classes were available for weaving as soon as they were loaded).
 
@@ -123,19 +137,36 @@ execution(InterceptorApplication..EnhancerBySpringCGLIB..8ce66f62.setBeanFactory
 To run in the IDE you need to add the agent to your launch configuration.
 
 ```
--javaagent:${system_property:user.home}/.m2/repository/org/aspectj/aspectjweaver/1.8.13/aspectjweaver-1.8.13.jar
+-javaagent:${system_property:user.home}/.m2/repository/org/aspectj/aspectjweaver/[version]/aspectjweaver-[version].jar
+```
+
+or simply
+
+```
+-javaagent:target/aspectj/aspectjweaver-[version].jar
 ```
 
 Note that you could add `@EnableLoadTimeWeaving` to the main application class, but it should probably be removed, as it's misleading.
 
-There's an open issue asking for `@EnableLoadTimeWeaving` support in Spring Boot, and a user who says he made it work with a `PropertiesLauncher` (because it can set the class loader really early): https://github.com/spring-projects/spring-boot/issues/739. It doesn't work to set the classloader in the main method because too many Spring Boot classes have already been loaded by then, but there is a trick you can play with [attaching the agent at runtime]http://www.eclipse.org/aspectj/doc/released/README-187.html (in which case all classes loaded up to that point can not be woven).
+There's an open issue asking for `@EnableLoadTimeWeaving` support in Spring Boot, and a user who says he made it work with a `PropertiesLauncher` (because it can set the class loader really early): https://github.com/spring-projects/spring-boot/issues/739. It doesn't work to set the classloader in the main method because too many Spring Boot classes have already been loaded by then, but there is a trick you can play with http://www.eclipse.org/aspectj/doc/released/README-187.html[attaching the agent at runtime] (in which case all classes loaded up to that point can not be woven).
 
 NOTE: You can enable logging of the weaving using `-Daj.weaving.verbose=true`.
 
-Useful links:
+== Run the CTW Sample
 
-* http://stackoverflow.com/questions/21350966/using-autowired-with-aspectj-and-springboot/21367986
-* http://www.eclipse.org/aspectj/doc/released/README-187.html
+```
+$ cd ctw
+$ mvn spring-boot:run
+```
+
+The compile time weaving example does not need any Java agent.
+
+== Useful Links
+
+* https://stackoverflow.com/questions/21350966/using-autowired-with-aspectj-and-springboot/21367986
+* https://stackoverflow.com/questions/12423965/maven-aspectj-all-steps-to-configure-it
+* https://stackoverflow.com/questions/40472614/simple-configurable-with-modern-spring-boot-gradle
+* https://www.eclipse.org/aspectj/doc/released/README-187.html
 * https://github.com/spring-projects/spring-boot/issues/6626
 * https://github.com/spring-projects/spring-boot/issues/7587
 * https://github.com/spring-projects/spring-boot/issues/739

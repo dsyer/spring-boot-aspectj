@@ -5,22 +5,22 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.1.RELEASE</version>
+		<version>2.2.4.RELEASE</version>
 	</parent>
 
 	<groupId>com.example</groupId>
 	<artifactId>multi-ltw</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>LTW Parent Demo</name>
+	<name>multi-ltw</name>
 
 	<modules>
-		<module>aspects</module>
-		<module>app</module>
+		<module>ltw-aspects</module>
+		<module>ltw-app</module>
 	</modules>
 
 	<properties>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
 	</properties>
 
 	<build>
