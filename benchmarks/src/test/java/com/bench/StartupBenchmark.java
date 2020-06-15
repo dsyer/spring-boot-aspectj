@@ -15,6 +15,9 @@
  */
 package com.bench;
 
+import org.junit.platform.commons.annotation.Testable;
+import org.openjdk.jmh.annotations.AuxCounters;
+import org.openjdk.jmh.annotations.AuxCounters.Type;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -28,20 +31,25 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.annotations.Warmup;
 
-@Measurement(iterations = 5)
-@Warmup(iterations = 1)
+import jmh.mbr.junit5.Microbenchmark;
+
+@Measurement(iterations = 5, time = 1)
+@Warmup(iterations = 1, time = 1)
 @Fork(value = 2, warmups = 0)
 @BenchmarkMode(Mode.AverageTime)
+@Microbenchmark
 public class StartupBenchmark {
 
 	private static final String M2_REPOSITORY_ASPECTJWEAVER = "/.m2/repository/org/aspectj/aspectjweaver/1.9.5/aspectjweaver-1.9.5.jar";
 
 	@Benchmark
+	@Testable
 	public void spring(SpringState state) throws Exception {
 		state.run();
 	}
 
 	@Benchmark
+	@Testable
 	public void ltw(ApplicationState state) throws Exception {
 		state.setProgArgs("--spring.aop.auto=false");
 		state.setJvmArgs("-javaagent:" + home() + M2_REPOSITORY_ASPECTJWEAVER);
@@ -49,6 +57,7 @@ public class StartupBenchmark {
 	}
 
 	@Benchmark
+	@Testable
 	public void ltw_100(ApplicationState state) throws Exception {
 		state.setProgArgs("--bench.beans=100", "--spring.aop.auto=false");
 		state.setJvmArgs("-javaagent:" + home() + M2_REPOSITORY_ASPECTJWEAVER);
@@ -59,7 +68,8 @@ public class StartupBenchmark {
 		return System.getProperty("user.home");
 	}
 
-	@State(Scope.Benchmark)
+	@State(Scope.Thread)
+	@AuxCounters(Type.EVENTS)
 	public static class SpringState extends ProcessLauncherState {
 
 		public static enum Scale {
@@ -87,32 +97,33 @@ public class StartupBenchmark {
 			}
 		}
 
-		@Param
+		@Param // ("a1_100")
 		private Scale scale = Scale.v1_10;
 
 		public SpringState() {
 			super("target");
 		}
 
-		@Setup(Level.Iteration)
+		@Setup(Level.Trial)
 		public void start() throws Exception {
 			setProgArgs(scale.getArgs());
 		}
 
-		@TearDown(Level.Iteration)
+		@TearDown(Level.Invocation)
 		public void stop() throws Exception {
 			super.after();
 		}
 	}
 
-	@State(Scope.Benchmark)
+	@State(Scope.Thread)
+	@AuxCounters(Type.EVENTS)
 	public static class ApplicationState extends ProcessLauncherState {
 
 		public ApplicationState() {
 			super("target", "--server.port=0");
 		}
 
-		@TearDown(Level.Iteration)
+		@TearDown(Level.Invocation)
 		public void stop() throws Exception {
 			super.after();
 		}

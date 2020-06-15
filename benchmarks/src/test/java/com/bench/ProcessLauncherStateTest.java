@@ -1,9 +1,7 @@
 package com.bench;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Ignore;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +12,14 @@ class ProcessLauncherStateTest {
 
 	private final String CLASSPATH_PART_RESULT = "spring-boot-aspectj/benchmarks/target/test-classes/";
 
-	@BeforeEach
-	void setUp() throws Exception {
+	@Test
+	void testApplication() throws Exception {
+		ProcessLauncherState processLauncherState = new ProcessLauncherState("target");
+		processLauncherState.run();
+		processLauncherState.after();
 	}
 
-	@Ignore
+	@Test
 	void testGetClasspathJdk8() {
 		ProcessLauncherState processLauncherState = new ProcessLauncherState("", "");
 		String classpathName = processLauncherState.getClasspathJdk8();
