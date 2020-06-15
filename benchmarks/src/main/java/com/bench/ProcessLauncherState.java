@@ -31,6 +31,7 @@ import java.util.List;
 import org.openjdk.jmh.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.system.JavaVersion;
 
 import com.example.InterceptorApplication;
 
@@ -52,7 +53,7 @@ public class ProcessLauncherState {
 		this.args.add(count++, System.getProperty("java.home") + "/bin/java");
 		this.args.add(count++, "-Xmx128m");
 		this.args.add(count++, "-cp");
-		this.args.add(count++, getClasspathJdk9());
+		this.args.add(count++, getClasspath());
 		this.args.add(count++, "-Djava.security.egd=file:/dev/./urandom");
 		this.args.add(count++, "-XX:TieredStopAtLevel=1"); // zoom
 		if (System.getProperty("bench.args") != null) {
@@ -72,6 +73,13 @@ public class ProcessLauncherState {
 
 	public void setJvmArgs(String... extraArgs) {
 		this.jvmArgs = Arrays.asList(extraArgs);
+	}
+
+	String getClasspath() {
+		if (JavaVersion.getJavaVersion().isOlderThan(JavaVersion.NINE)) {
+			return getClasspathJdk8();
+		}
+		return getClasspathJdk9();
 	}
 
 	String getClasspathJdk8() {
