@@ -19,7 +19,7 @@ NOTE: AspectJ 1.8.13 (included with Spring Boot 1.5.9) has some major performanc
 
 You need to tell AspectJ where to find your aspects, and which classes you want it to weave. You also need to tell Spring not to try and weave the same aspects again (in Spring Boot you can do that with `spring.aop.auto=false`). The configuration for AspectJ lives in an https://eclipse.org/aspectj/doc/next/devguide/ltw-configuration.html[XML file] `aop.xml`, which can be in `META-INF` or in a package called `org.aspectj`. Here's a simple example:
 
-.src/main/resources/org.aspectj/aop.xml
+.src/main/resources/org/aspectj/aop.xml
 [source,xml]
 ----
 <!DOCTYPE aspectj PUBLIC "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">

@@ -54,12 +54,12 @@ public class TimingInterceptor {
 
 	@Around("execution(* org.springframework.beans.factory.config.BeanPostProcessor+.*(Object, String)) && args(bean,..)")
 	public Object post(ProceedingJoinPoint joinPoint, Object bean) throws Throwable {
-		long t0 = System.currentTimeMillis();
+		long t0 = System.nanoTime();
 		Object result = joinPoint.proceed();
-		long t1 = System.currentTimeMillis();
+		long t1 = System.nanoTime();
 		logger.info("Post," + joinPoint.getSignature().getDeclaringType().getSimpleName()
 				+ "." + joinPoint.getSignature().getName() + ","
-				+ bean.getClass().getName() + "," + (t1 - t0));
+				+ bean.getClass().getName() + "," + (t1 - t0) / 1000000.);
 		return result;
 	}
 
@@ -69,29 +69,29 @@ public class TimingInterceptor {
 		if (task != null) {
 			app.stop();
 		}
-		long t0 = System.currentTimeMillis();
+		long t0 = System.nanoTime();
 		level++;
 		app.start(joinPoint.getSignature().getName());
 		Object result = joinPoint.proceed();
-		long t1 = System.currentTimeMillis();
+		long t1 = System.nanoTime();
 		app.stop();
 		if (task != null) {
 			app.start(task);
 		}
 		logger.info("App," + level + "," + joinPoint.getSignature().getName() + ","
-				+ (t1 - t0));
+				+ (t1 - t0) / 1000000.);
 		level--;
 		return result;
 	}
 
 	@Around("execution(* org.springframework.web.reactive.DispatcherHandler+.initStrategies(..))")
 	public Object initStrategies(ProceedingJoinPoint joinPoint) throws Throwable {
-		long t0 = System.currentTimeMillis();
+		long t0 = System.nanoTime();
 		Object result = joinPoint.proceed();
-		long t1 = System.currentTimeMillis();
+		long t1 = System.nanoTime();
 		logger.info("Strategies,"
 				+ joinPoint.getSignature().getDeclaringType().getSimpleName() + "."
-				+ joinPoint.getSignature().getName() + "," + (t1 - t0));
+				+ joinPoint.getSignature().getName() + "," + (t1 - t0) / 1000000.);
 		return result;
 	}
 
@@ -104,16 +104,17 @@ public class TimingInterceptor {
 		}
 		init.start(name);
 		int count0 = init.getTaskCount();
-		long t0 = System.currentTimeMillis();
+		long t0 = System.nanoTime();
 		Object result = joinPoint.proceed();
-		long t1 = System.currentTimeMillis();
+		long t1 = System.nanoTime();
 		int count1 = init.getTaskCount();
 		init.stop();
 		if (task != null) {
 			init.start(task);
 		}
 		else {
-			logger.info("Init,," + bean.getClass().getName() + "," + (t1 - t0));
+			logger.info(
+					"Init,," + bean.getClass().getName() + "," + (t1 - t0) / 1000000.);
 			logger.info("Count,," + bean.getClass().getName() + "," + (count1 - count0));
 		}
 		return result;
